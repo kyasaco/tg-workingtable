@@ -70,6 +70,7 @@ public class AdminController {
 		mav.setViewName("Admin/AdminDateDelete");
 		return mav;
 	}
+	//変更
 	//検索マッピング********************************************************************/
 	@PostMapping("/search")
 	public ModelAndView searchDate(
