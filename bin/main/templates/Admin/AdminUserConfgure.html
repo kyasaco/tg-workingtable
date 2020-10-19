@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>管理者用勤務表削除</title>
+	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+	<!-- import js.file CDN↓ -->
+	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
+	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
+	<!-- import ResetCss & CDN & Local　↓ -->
+	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<table class="DateTable">
+		<thead class="DateTable-thead">
+			<th class="DateTable-Column">従業員ID</th>
+			<th class="DateTable-Column">password</th>
+			<th class="DateTable-Column">勤務開始時間</th>
+			<th class="DateTable-Column">勤務終了時間</th>
+		</thead>
+		<tbody class="DateTable-tbody">
+			<tr th:each="data:${user_data}">
+				<td th:text="${data.userid}" class="DateTable-Data"></td>
+				<td th:text="${data.firstname}" class="DateTable-Data"></td>
+				<td th:text="${data.lastname}" class="DateTable-Data"></td>
+				<td th:text="${data.rolename}" class="DateTable-Data"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
