@@ -11,6 +11,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.example.demo.doamin.MySessionInformation;
 import com.example.demo.doamin.service.user.WorkersUserDetailsService;
+
 import lombok.AllArgsConstructor;
 
 @EnableWebSecurity
@@ -51,6 +52,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			.antMatchers("/js/**","/css/**","/insertForm","/insert").permitAll()
 			//	anyRequest().authenticated()：全てのURLリクエストは認証されているユーザしかアクセスできない
 			.and()
+			//{/Admin/**}パスはADMINのロールが必要
 			.authorizeRequests().mvcMatchers("/Admin/**").hasRole("ADMIN")
 			.anyRequest().authenticated()
 			.and()
@@ -70,6 +72,8 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			.defaultSuccessUrl("/",true)
 			//failureUrl(URL)：ログインに失敗したときのURL。?errorとつけるとThymeleafでの処理が楽
 			.failureUrl("/loginForm?error=true").permitAll()
+			.and()
+			.exceptionHandling().accessDeniedPage("/ErrorPage")
 			.and()
 			.sessionManagement().maximumSessions(1).expiredUrl("/loginForm").expiredSessionStrategy(new MySessionInformation());
 

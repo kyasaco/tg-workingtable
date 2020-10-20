@@ -9,7 +9,8 @@
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
 	<!-- import ResetCss & CDN & Local　↓ -->
-	<link th:href="@{../css/resetcss.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body th:with="user=${#authentication.principal.user}">

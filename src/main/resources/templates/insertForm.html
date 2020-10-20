@@ -18,18 +18,35 @@
 <body>
 	<h3>登録フォーム</h3>
 
-	<form th:action="@{/insert}" method="post" th:object="${formv}">
+	<form th:action="@{/insert}" method="post" th:object="${InsertForm}">
 		<table>
 				<tr>
 					<td><label for="userid">User:</label></td>
-					<td><input type="text" id="userid" name="userid"
-					value="1000">
+					<td><input type="text" id="userid" name="userid" value="">
 					</td>
 				</tr>
 				<tr>
 					<td><label for="password">PassWord:</label></td>
-					<td><input type="password" id="password" name="password"
-					value="123456789">
+					<td><input type="password" id="password" name="password" value=""></td>
+				</tr>
+				<tr>
+					<td><label for="lastname">苗字:</label></td>
+					<td><input type="text" id="lastname" name="lastname" value=""></td>
+				</tr>
+				<tr>
+					<td><label for="firstname">名前:</label></td>
+					<td><input type="text" id="firstname" name="firstname"value=""></td>
+				</tr>
+				<tr>
+					<td>
+						<span>部署：</span>
+					</td>
+					<td>
+						<label for="system">システム部</label>
+						<input type="radio" name="rolename" id="system"value="システム部">
+
+						<label for="design">設計部</label>
+						<input type="radio" name="rolename" id="design"value="設計部">
 					</td>
 				</tr>
 				<tr>

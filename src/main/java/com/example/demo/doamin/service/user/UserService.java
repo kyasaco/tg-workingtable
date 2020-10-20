@@ -26,9 +26,9 @@ public class UserService {
 		User user= new User();
 		user.setUserid(insertForm.getUserid());
 		user.setPassword(passwordEncoder.encode(insertForm.getPassword()));
-		user.setFirstname("悠馬");
-		user.setLastname("柏田");
-		user.setRolename(RoleName.ADMIN);
+		user.setFirstname(insertForm.getFirstname());
+		user.setLastname(insertForm.getLastname());
+		user.setRolename(insertForm.getRolename());
 		repository.saveAndFlush(user);
 	}
 

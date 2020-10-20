@@ -15,28 +15,29 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class LoginController {
 	private final UserService userservice;
-	
+
 	@ModelAttribute("InsertForm")
 	InsertForm setUpInsertform() {
 		return new InsertForm();
 	}
-	
+
 	@RequestMapping("loginForm")
 	String loginForm() {
 		return "login/loginForm";
 	}
-	
+
 	@RequestMapping("insertForm")
-	ModelAndView InsertForm(ModelAndView mav,InsertForm insertForm) {
+	ModelAndView InsertForm(ModelAndView mav) {
 		mav.setViewName("insertForm");
-		mav.addObject("formv", insertForm);
 		return mav;
 	}
 	@RequestMapping(value="insert",method = RequestMethod.POST)
-	ModelAndView InsertGoForm(ModelAndView mav,InsertForm insertForm) {
+	ModelAndView InsertGoForm(
+			ModelAndView mav,
+			@ModelAttribute("InsertForm")InsertForm insertForm) {
 		mav.setViewName("login/loginForm");
 		userservice.InsertUser(insertForm);
 		return mav;
 	}
-	
+
 }

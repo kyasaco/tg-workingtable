@@ -72,9 +72,6 @@ public class EntryController {
 		mav.addObject("today", entryForm.getDtoday());
 		mav.setViewName("index");
 		mav.addObject("Luser", workersUserDetails.getUser());
-		//デバッグ用↓----------------------------------------------------------
-		//------------------------------------------------------------------------
-
 		if(!result.hasErrors()){
 			if(dateservice.findOneTandWID(Integer.valueOf(entryForm.getWorkersId()), Date.valueOf(entryForm.getToday())).isPresent()) {
 				mav.addObject("NullError", "データが存在しません");
