@@ -4,12 +4,6 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>カレンダー</title>
-	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
-	<!-- import js.file CDN↓ -->
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
-	<!-- import js.file Local↓ -->
-
 
 	<!-- import ResetCss & CDN & Local　↓ -->
 	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
@@ -56,23 +50,18 @@
 						</div>
 			<table class="DateTable">
 				<thead class="DateTable-thead">
-					<th class="DateTable-Column">従業員ID</th>
 					<th class="DateTable-Column">日付</th>
 					<th class="DateTable-Column">勤務開始時間</th>
 					<th class="DateTable-Column">勤務終了時間</th>
 				</thead>
 				<tbody class="DateTable-tbody">
 					<tr th:each="data:${DateTableData}">
-						<td th:text="${data.workersId}" class="DateTable-Data"></td>
 						<td th:text="${data.today}" class="DateTable-Data"></td>
 						<td th:text="${data.startTime}" class="DateTable-Data"></td>
 						<td th:text="${data.endTime}" class="DateTable-Data"></td>
 					</tr>
 				</tbody>
 			</table>
-			<label th:text="${as}"></label>
-			<label th:text="${ps}"></label>
-			<label th:text="${tds}"></label>
 			<form th:action="@{/logout}" method="post">
 				<button>ログアウト</button>
 			</form>
@@ -84,5 +73,11 @@
 							<span>footer</span>
 				</div>
 	</footer>
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<!-- import js.file CDN↓ -->
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
+<!-- import js.file Local↓ -->
+
 </body>
 </html>

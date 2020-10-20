@@ -23,6 +23,10 @@ public class DateService {
 	public Optional<DateEntity> findOne(Integer id) {
 		return repository.findById(id);
 	}
+
+	public Optional<DateEntity> findOneTandWID(Integer id,Date today) {
+		return repository.findQueryTandWID(id, today);
+	}
 	//idで一件削除
 	public void DeleteOne(Integer id) {
 		repository.deleteById(id);
@@ -50,6 +54,6 @@ public class DateService {
 	}
 	//workers_idで検索
 	public List<DateEntity> findByWorkersId(String userid){
-		return repository.findByWorkersId(userid);
+		return repository.findByWorkersIdOrderByToday(userid);
 	}
  }

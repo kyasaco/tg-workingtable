@@ -1,5 +1,6 @@
 package com.example.demo.app.entry;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -74,9 +75,13 @@ public class EntryController {
 		//デバッグ用↓----------------------------------------------------------
 		//------------------------------------------------------------------------
 
-		if(!result.hasErrors())
-		{
-			dateservice.SaveFlush(entryForm);
+		if(!result.hasErrors()){
+			if(dateservice.findOneTandWID(Integer.valueOf(entryForm.getWorkersId()), Date.valueOf(entryForm.getToday())).isPresent()) {
+				mav.addObject("NullError", "データが存在しません");
+			}
+			else {
+				dateservice.SaveFlush(entryForm);
+			}
 		}
 		else
 		{
