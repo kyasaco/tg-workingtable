@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html  xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +12,13 @@
 	<link th:href="@{../css/resetcss.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<form th:action="@{/Admin}" method="post">
-<input type="submit" name="date" value="勤務表管理画面へ">
-<input type="submit" name="user" value="利用者管理画面へ">
-</form>
+<body th:with="user=${#authentication.principal.user}">
+<div sec:authorize="${hasRole('ADMIN')}">
+	<form th:action="@{/Admin}" method="post" style="text-align: canter">
+	<input type="submit" name="date" value="勤務表管理画面へ">
+	<input type="submit" name="user" value="利用者管理画面へ">
+	</form>
+</div>
 
 </body>
 </html>

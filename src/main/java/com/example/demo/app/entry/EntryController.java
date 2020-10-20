@@ -40,7 +40,7 @@ public class EntryController {
 	@ModelAttribute("EntryForm")
 	EntryForm setUpForm() {
 		 EntryForm entryForm = new EntryForm();
-		 return entryForm;
+		return entryForm;
 	}
 
 	@GetMapping({"/","/{today}"})

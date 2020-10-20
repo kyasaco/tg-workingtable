@@ -16,16 +16,16 @@ import lombok.AllArgsConstructor;
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
-	
+
 	//ユーザー検索処理を書いたUserDetailsServiceインターフェースを実装したクラスを宣言
 	private final WorkersUserDetailsService userDetailsService;
-	
+
 	//HttpSession生成・破棄イベントのハンドラ(処理要求が発生したときに起動されるプログラムのこと)
 	@Bean
 	public HttpSessionEventPublisher  httpSessionEventPublisher() {
 		return new HttpSessionEventPublisher();
 	}
-	
+
 	/*パスワードエンコード用*/
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -37,7 +37,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	 * 	ignoring().antMatchers("/resources/**");
 	 * }
 	 * */
-	
+	@Override
 	/*HttpSecurityクラス：特定のhttpリクエストに対してWebベースのセキュリティを構成できる*/
 	protected void configure(HttpSecurity http) throws Exception{
 		//authorizeRequests:何のリクエストを許可するか
@@ -50,6 +50,8 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			*/
 			.antMatchers("/js/**","/css/**","/insertForm","/insert").permitAll()
 			//	anyRequest().authenticated()：全てのURLリクエストは認証されているユーザしかアクセスできない
+			.and()
+			.authorizeRequests().mvcMatchers("/Admin/**").hasRole("ADMIN")
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()
@@ -70,12 +72,11 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			.failureUrl("/loginForm?error=true").permitAll()
 			.and()
 			.sessionManagement().maximumSessions(1).expiredUrl("/loginForm").expiredSessionStrategy(new MySessionInformation());
-		
 
-				
+
 	}
-	
-	
+
+
 	/*
 	 * configure(AuthenticationManagerBuilder auth)メソッドをオーバーライドして使用することで
 	 * メモリ内認証、LDAP認証、JDBCベースの認証、UserDetailsServiceの追加、AuthenticationProviderの追加を簡単に構築できる by wiki
