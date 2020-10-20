@@ -19,17 +19,20 @@ import lombok.AllArgsConstructor;
 public class DateService {
 	private final DateRepository repository;
 
+	//idで一件取得
 	public Optional<DateEntity> findOne(Integer id) {
 		return repository.findById(id);
 	}
+	//idで一件削除
 	public void DeleteOne(Integer id) {
 		repository.deleteById(id);
 	}
+	//today昇順で全件取得
 	public List<DateEntity> findAllAsc()
 	{
 		return repository.findByOrderByTodayAsc();
 	}
-
+	//一件登録＆更新
 	public void SaveFlush(EntryForm entryForm)
 	{
 
@@ -41,11 +44,11 @@ public class DateService {
 
 		repository.saveAndFlush(dateEntity);
 	}
-
+	//todayで検索
 	public List<DateEntity> findByToday(Date today){
 		return repository.findByToday(today);
 	}
-
+	//workers_idで検索
 	public List<DateEntity> findByWorkersId(String userid){
 		return repository.findByWorkersId(userid);
 	}

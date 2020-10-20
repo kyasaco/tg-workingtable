@@ -55,7 +55,7 @@ public class EntryController {
 		}
 		mav.addObject("today",today);
 		mav.setViewName("index");
-		List<DateEntity> datedata = dateservice.findAllAsc();
+		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
 		mav.addObject("DateTableData", datedata);
 		mav.addObject("Luser", workersUserDetails.getUser());
 
@@ -82,7 +82,7 @@ public class EntryController {
 		{
 			mav.addObject("errmsg", "入力エラーです");
 		}
-		List<DateEntity> datedata = dateservice.findAllAsc();
+		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
 		mav.addObject("DateTableData", datedata);
 		return mav;
 	}
