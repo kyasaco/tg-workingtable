@@ -1,8 +1,11 @@
 package com.example.demo.app.login;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,12 +34,16 @@ public class LoginController {
 		mav.setViewName("insertForm");
 		return mav;
 	}
-	@RequestMapping(value="insert",method = RequestMethod.POST)
+	@PostMapping(value="/insert")
 	ModelAndView InsertGoForm(
 			ModelAndView mav,
-			@ModelAttribute("InsertForm")InsertForm insertForm) {
-		mav.setViewName("login/loginForm");
-		userservice.InsertUser(insertForm);
+			@Validated @ModelAttribute("InsertForm")InsertForm insertForm,
+			BindingResult result) {
+		mav.setViewName("insertForm");
+		if(!result.hasErrors()) {
+			mav.setViewName("redirect:/login/loginForm");
+			userservice.InsertUser(insertForm);
+		}
 		return mav;
 	}
 

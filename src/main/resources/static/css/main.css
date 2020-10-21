@@ -10,27 +10,27 @@ main
 	text-align: center;
 }
 a{
-	font-size:80%;
-  position: relative;
-  display: inline-block;
-  transition: .3s;
-  text-decoration: none;;
+	font-size:75%;
+	position: relative;
+	display: inline-block;
+	transition: .3s;
+	text-decoration: none;;
 }
 
 a::after {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  content: '';
-  width: 0;
-  height: 2px;
-  background-color: #31aae2;
-  transition: .3s;
-  transform: translateX(-50%);
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	content: '';
+	width: 0;
+	height: 2px;
+	background-color: #31aae2;
+	transition: .3s;
+	transform: translateX(-50%);
 }
 
 a:hover::after{
-  width: 100%;
+	width: 100%;
 }
 /**diplay:inline-blockは親要素に対して指定できる**/
 .main-text-custom
@@ -126,4 +126,39 @@ input[type="submit"]:active{
 	text-align:center;
 	border: 2px solid grey;
 	border-collapse: collapse;
+}
+/***********insertForm.html***********/
+.form_custom{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.form_input{
+	margin-bottom: 1em;
+}
+.requried_msg{
+	font-size:16px;
+}
+#form_go{
+	text-align: end;
+}
+hr{
+	height:0.5em;
+	border-top-width: 3px;
+	margin:0;
+}
+h2{
+	margin-top: 5%;
+}
+.error_msg{
+	color:red;
+	font-size: 12px;
+	margin-left: auto;
+}
+#pwd_error{
+	display: flex;
+}
+#pwd_lavel{
+		display: flex;
+		align-items: flex-end;
 }

@@ -25,6 +25,7 @@ import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.user.UserService;
 import com.example.demo.doamin.service.user.WorkersUserDetails;
+import com.example.demo.errors.DateValidation;
 
 import io.github.classgraph.AnnotationEnumValue;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class EntryController {
 	/*DIするサービスクラスを宣言*/
 	private final UserService userservice;
 	private final DateService dateservice;
+	private final DateValidation dateValidation;
 
 	/*Formの初期化と宣言*/
 	@ModelAttribute("EntryForm")
@@ -75,22 +77,7 @@ public class EntryController {
 		mav.setViewName("index");
 		mav.addObject("Luser", workersUserDetails.getUser());
 		if(!result.hasErrors()){
-			int bool = dateservice.SaveFlush(entryForm);
-			String errormessage = "";
-			switch(bool) {
-			case 0:
-				errormessage = "登録成功！";
-				break;
-			case 1:
-				errormessage =  "時間エラー";
-				break;
-			case 2:
-				errormessage = "日付が重複";
-				break;
-			default:
-				errormessage = "不明なエラー";
-				break;
-			}
+			String errormessage = dateValidation.ErrorSwitching(dateservice.SaveFlush(entryForm));
 			mav.addObject("errormsg", errormessage);
 		}
 		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());

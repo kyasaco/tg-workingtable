@@ -1,12 +1,28 @@
 package com.example.demo.errors;
 
-import com.example.demo.doamin.service.DataService.DateService;
+import org.springframework.stereotype.Component;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
+@Component
 public class DateValidation {
 
-	private final DateService dateService;
+	public String ErrorSwitching(int num) {
+		String message = "";
+		switch (num) {
+		case 0:
+			message = "登録成功！";
+			break;
+		case 1:
+			message =  "時間エラー";
+			break;
+		case 2:
+			message = "日付が重複";
+			break;
+		default:
+			message = "不明なエラー";
+			break;
+		}
+		return message;
+	}
+
 
 }

@@ -25,8 +25,8 @@
 		<tbody class="DateTable-tbody">
 			<tr th:each="data:${user_data}">
 				<td th:text="${data.userid}" class="DateTable-Data"></td>
-				<td th:text="${data.firstname}" class="DateTable-Data"></td>
 				<td th:text="${data.lastname}" class="DateTable-Data"></td>
+				<td th:text="${data.firstname}" class="DateTable-Data"></td>
 				<td th:text="${data.rolename}" class="DateTable-Data"></td>
 				<td>
 				<button th:onclick="'location.href=\''+@{/Admin/ConfUser/Delete/{id}(id=${data.userid})} + '\''">削除</button>

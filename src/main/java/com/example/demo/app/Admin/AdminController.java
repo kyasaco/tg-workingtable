@@ -72,7 +72,7 @@ public class AdminController {
 	}
 	//変更
 	//検索マッピング********************************************************************/
-	@PostMapping("/search")
+	@PostMapping("**/search")
 	public ModelAndView searchDate(
 			@RequestParam(name = "userid")String userid,
 			@RequestParam(name = "today")String today,

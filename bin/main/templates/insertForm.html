@@ -1,60 +1,72 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>登録</title>
-	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
-	<!-- import js.file CDN↓ -->
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
-	<!-- import js.file Local↓ -->
-
-
-	<!-- import ResetCss & CDN & Local　↓ -->
-	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
+<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登録</title>
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<!-- import js.file CDN↓ -->
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
+<!-- import ResetCss & CDN & Local　↓ -->
+<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
+<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}"rel="stylesheet" type="text/css">
 </head>
 <body>
-	<h3>登録フォーム</h3>
+	<div class="form_custom">
+		<h2>登録フォーム</h2>
+		<form th:action="@{/insert}" method="post" th:object="${InsertForm}">
+			<table>
+				<tr>
+					<td><hr><label for="userid">User<span class="requried_msg">(必須)</span>:</label><span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" class="error_msg"></span></td>
+				</tr>
+				<tr>
+					<td><input type="text" class="form_input" id="userid" name="userid" th:value="*{userid}"></td>
+				</tr>
 
-	<form th:action="@{/insert}" method="post" th:object="${InsertForm}">
-		<table>
 				<tr>
-					<td><label for="userid">User:</label></td>
-					<td><input type="text" id="userid" name="userid" value="">
-					</td>
+					<td id="pwd_error"><label id="pwd_lavel" for="password">PassWord<span class="requried_msg">(必須)</span>:</label><div><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error_msg"></span></div></td>
 				</tr>
 				<tr>
-					<td><label for="password">PassWord:</label></td>
-					<td><input type="password" id="password" name="password" value=""></td>
+					<td><input type="password"  class="form_input" id="password" name="password" th:value="*{password}"></td>
+				</tr>
+
+				<tr>
+					<td><label for="lastname">苗字<span class="requried_msg">(必須)</span>:</label><span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="error_msg"></span></td>
 				</tr>
 				<tr>
-					<td><label for="lastname">苗字:</label></td>
-					<td><input type="text" id="lastname" name="lastname" value=""></td>
+					<td><input type="text"  class="form_input" id="lastname" name="lastname" th:value="*{lastname}"></td>
+				</tr>
+
+				<tr>
+					<td><label for="firstname">名前<span class="requried_msg">(必須)</span>:</label><span th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" class="error_msg"></span></td>
 				</tr>
 				<tr>
-					<td><label for="firstname">名前:</label></td>
-					<td><input type="text" id="firstname" name="firstname"value=""></td>
+					<td><input type="text"  class="form_input" id="firstname" name="firstname" th:value="*{firstname}"></td>
+				</tr>
+
+				<tr>
+					<td><span>部署<span class="requried_msg">(必須)</span>：</span><span th:if="${#fields.hasErrors('rolename')}" th:errors="*{rolename}"  class="error_msg"></span></td>
 				</tr>
 				<tr>
-					<td>
-						<span>部署：</span>
-					</td>
-					<td>
+					<td><input type="radio"  id="system" value="システム部" th:field="*{rolename}">
 						<label for="system">システム部</label>
-						<input type="radio" name="rolename" id="system"value="システム部">
-
-						<label for="design">設計部</label>
-						<input type="radio" name="rolename" id="design"value="設計部">
+						<input type="radio"  id="design" value="設計部"th:field="*{rolename}">
+						<label for="design">設計部</label><br>
+						<input type="radio"  id="GUEST" value="GUEST" th:field="*{rolename}">
+						<label for="GUEST">GUEST</label>
 					</td>
 				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td><button type="submit">登録</button></td>
+				<tr id="form_go">
+					<td><hr><button  onclick="location.href='/insert'" >クリア</button><input type="submit"  name="go" value="登録"></td>
 				</tr>
-		</table>
-	</form>
-	<a href="login/loginForm">ログイン画面へ戻る</a>
+				<tr id="form_go">
+					<td><a href="login/loginForm">ログイン画面へ戻る</a></td>
+				</tr>
+			</table>
+		</form>
+
+	</div>
 </body>
 </html>
