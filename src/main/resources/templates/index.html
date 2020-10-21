@@ -34,7 +34,7 @@
 
 								<!-- 部署 -->
 								<div class="busyo-block">
-									<label >部署：</label><label th:text="${Luser.rolename}"></label>
+									<label >部署：</label><label th:text="${Luser.rolename}"></label><span id="insert_errors" th:text="${errormsg}" ></span>
 								</div>
 								<!-- 従業時間 -->
 								<p th:text="${errmsg}"></p>
@@ -43,9 +43,7 @@
 									<input class="timeDial" th:field="*{startTime}" type="time" value="hh:mm" name="startTime"step="1800" required> ～
 									<input class="timeDial" th:field="*{endTime}"type="time" value="hh:mm" name="endTime" step="1800" required>
 									<input type="submit" value="登録" class="submit-button">
-									<div class="result"></div>
 								</div>
-
 						</form>
 						</div>
 			<table class="DateTable">

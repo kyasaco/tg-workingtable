@@ -26,6 +26,7 @@ import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.user.UserService;
 import com.example.demo.doamin.service.user.WorkersUserDetails;
 
+import io.github.classgraph.AnnotationEnumValue;
 import lombok.AllArgsConstructor;
 @RequestMapping("/")
 @AllArgsConstructor
@@ -64,7 +65,8 @@ public class EntryController {
 	}
 
 	@PostMapping
-	public ModelAndView Entry(@Validated EntryForm entryForm,
+	public ModelAndView Entry(
+			@Validated EntryForm entryForm,
 			BindingResult result,
 			ModelAndView  mav,
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails)
@@ -73,16 +75,23 @@ public class EntryController {
 		mav.setViewName("index");
 		mav.addObject("Luser", workersUserDetails.getUser());
 		if(!result.hasErrors()){
-			if(dateservice.findOneTandWID(Integer.valueOf(entryForm.getWorkersId()), Date.valueOf(entryForm.getToday())).isPresent()) {
-				mav.addObject("NullError", "データが存在しません");
+			int bool = dateservice.SaveFlush(entryForm);
+			String errormessage = "";
+			switch(bool) {
+			case 0:
+				errormessage = "登録成功！";
+				break;
+			case 1:
+				errormessage =  "時間エラー";
+				break;
+			case 2:
+				errormessage = "日付が重複";
+				break;
+			default:
+				errormessage = "不明なエラー";
+				break;
 			}
-			else {
-				dateservice.SaveFlush(entryForm);
-			}
-		}
-		else
-		{
-			mav.addObject("errmsg", "入力エラーです");
+			mav.addObject("errormsg", errormessage);
 		}
 		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
 		mav.addObject("DateTableData", datedata);

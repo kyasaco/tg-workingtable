@@ -1,6 +1,8 @@
 package com.example.demo.doamin.service.DataService;
 
 import java.sql.Date;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +25,8 @@ public class DateService {
 	public Optional<DateEntity> findOne(Integer id) {
 		return repository.findById(id);
 	}
-
-	public Optional<DateEntity> findOneTandWID(Integer id,Date today) {
+	//useridとtodayに一致する一件の取得
+	public List<DateEntity> findOneTandWID(Integer id,Date today) {
 		return repository.findQueryTandWID(id, today);
 	}
 	//idで一件削除
@@ -36,10 +38,18 @@ public class DateService {
 	{
 		return repository.findByOrderByTodayAsc();
 	}
-	//一件登録＆更新
-	public void SaveFlush(EntryForm entryForm)
+	//一件登録＆更新 ->日付の重複チェックと開始時間が終了時間より前ということのチェックを追加
+	public int SaveFlush(EntryForm entryForm)
 	{
+		LocalTime Pasttime = LocalTime.parse(entryForm.getStartTime(), DateTimeFormatter.ISO_LOCAL_TIME);
+		LocalTime Futuretime = LocalTime.parse(entryForm.getEndTime(), DateTimeFormatter.ISO_LOCAL_TIME);
 
+		if(!findOneTandWID(Integer.valueOf(entryForm.getWorkersId()), Date.valueOf(entryForm.getToday())).isEmpty()) {
+			return 2;
+		}
+		else if(Pasttime.isAfter(Futuretime)) {
+			return 1;
+		}
 		DateEntity dateEntity = new DateEntity();
 		dateEntity.setToday(entryForm.getDtoday());
 		dateEntity.setStartTime(entryForm.getTimeClassAmTime());
@@ -47,7 +57,27 @@ public class DateService {
 		dateEntity.setWorkersId(entryForm.getWorkersId());
 
 		repository.saveAndFlush(dateEntity);
+		return 0;
 	}
+
+	//勤務表の検索処理：入力された値により検索処理を分岐
+	public List<DateEntity> VfindUIDandTDY(String userid,String today){
+		if(userid == "" && today == "") {
+			return findAllAsc();
+		}
+
+		if(userid == "" && today != "") {
+			Date dtoday = Date.valueOf(today);
+			return findByToday(dtoday);
+		}
+		else if (userid != "" && today == "") {
+			return findByWorkersId(userid);
+		}
+		else {
+			return findOneTandWID(Integer.valueOf(userid), Date.valueOf(today));
+		}
+	}
+
 	//todayで検索
 	public List<DateEntity> findByToday(Date today){
 		return repository.findByToday(today);

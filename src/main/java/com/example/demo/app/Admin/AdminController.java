@@ -77,17 +77,7 @@ public class AdminController {
 			@RequestParam(name = "userid")String userid,
 			@RequestParam(name = "today")String today,
 			ModelAndView mav) {
-		List<DateEntity> udata;
-		if(userid == "" && today != "") {
-			Date dtoday = Date.valueOf(today);
-			udata = dateservice.findByToday(dtoday);
-		}
-		else if (userid != "" && today == "") {
-			udata= dateservice.findByWorkersId(userid);
-		}
-		else {
-			udata = dateservice.findAllAsc();
-		}
+		List<DateEntity> udata = dateservice.VfindUIDandTDY(userid, today);
 		mav.addObject("date_data",udata);
 		mav.setViewName("Admin/AdminDateDelete");
 		return mav;

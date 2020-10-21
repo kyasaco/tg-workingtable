@@ -55,7 +55,7 @@ a:hover::after{
 	height: 5em;
 	background-color: rgba(0,0,255,0.3);
 }
-/**********FormCSS**********/ 
+/**********FormCSS**********/
 .worktime-block
 {
 	display:inline-block;
@@ -75,10 +75,10 @@ input[type="submit"]{
 }
 
 button:hover{
-		background:linear-gradient(0deg,#2894f9,#d2e4f7);	
+		background:linear-gradient(0deg,#2894f9,#d2e4f7);
 }
 button:active{
-		background:linear-gradient(0deg,#0074d8,#b6d6f7);	
+		background:linear-gradient(0deg,#0074d8,#b6d6f7);
 }
 button{
 	border:1px solid #0086f9;
@@ -91,16 +91,25 @@ button{
 }
 
 input[type="submit"]:hover{
-		background:linear-gradient(0deg,#2894f9,#d2e4f7);	
+		background:linear-gradient(0deg,#2894f9,#d2e4f7);
 }
 input[type="submit"]:active{
-		background:linear-gradient(0deg,#0074d8,#b6d6f7);	
+		background:linear-gradient(0deg,#0074d8,#b6d6f7);
 }
 .to-calendar
 {
 	display:inline-block;
 }
-/**********DateTableData**********/ 
+.busyo-block{
+	display: flex;
+	justify-content: flex-start;
+}
+#insert_errors{
+	color:red;
+	font-size: 12px;
+	margin-left: auto;
+}
+/**********DateTableData**********/
 .DateTable{
 	margin:auto auto;
 	border:4px solid;

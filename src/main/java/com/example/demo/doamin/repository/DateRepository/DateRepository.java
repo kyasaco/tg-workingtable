@@ -18,5 +18,5 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 
 	@Query(value="SELECT * FROM Date7 WHERE workers_id=?1 and today=?2"
 			,nativeQuery = true)
-	Optional<DateEntity> findQueryTandWID(Integer id,Date today);
+	List<DateEntity> findQueryTandWID(Integer id,Date today);
 }
