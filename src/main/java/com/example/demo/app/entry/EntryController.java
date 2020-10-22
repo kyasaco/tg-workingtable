@@ -44,6 +44,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 
 import io.github.classgraph.AnnotationEnumValue;
 import lombok.AllArgsConstructor;
+
+/*メインコントローラー：ログインに成功したユーザーの勤務表を出力するメイン画面*/
 @RequestMapping("/")
 @AllArgsConstructor
 @Controller
@@ -95,7 +97,7 @@ public class EntryController {
 		return entryForm;
 	}
 
-	//初期表示。パラメータの日付を受け取る
+	/*初期表示。パラメータの日付を受け取る*/
 	@GetMapping({"/","/{today}"})
 	public ModelAndView EntryView(
 	@PathVariable(name="today",required = false)
@@ -117,7 +119,7 @@ public class EntryController {
 		return mav;
 	}
 
-	//勤務表レコード登録。エラーでなければ登録
+	/*勤務表レコード登録。エラーでなければ登録*/
 	@PostMapping
 	public ModelAndView Entry(
 			@Validated EntryForm entryForm,

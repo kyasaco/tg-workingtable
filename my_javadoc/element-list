@@ -1,0 +1,13 @@
+com.example.demo
+com.example.demo.app.Admin
+com.example.demo.app.Calendar
+com.example.demo.app.entry
+com.example.demo.app.Error
+com.example.demo.app.login
+com.example.demo.doamin
+com.example.demo.doamin.model
+com.example.demo.doamin.repository.DateRepository
+com.example.demo.doamin.repository.user
+com.example.demo.doamin.service.DataService
+com.example.demo.doamin.service.user
+com.example.demo.errors
