@@ -19,7 +19,7 @@
 <body>
 	<div class="form_custom">
 		<h2>ログインフォーム</h2>
-		<p th:if="${param.error}">もう一度やりなおしてください</p>
+		<p th:if="${param.error}" class="error_msg" >もう一度やりなおしてください</p>
 		<form th:action="@{/login}" method="post">
 			<table>
 			<tbody>

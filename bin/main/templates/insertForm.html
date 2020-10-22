@@ -19,35 +19,52 @@
 		<form th:action="@{/insert}" method="post" th:object="${InsertForm}">
 			<table>
 				<tr>
-					<td><hr><label for="userid">User<span class="requried_msg">(必須)</span>:</label><span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" class="error_msg"></span></td>
+					<hr>
+					<td id="pwd_error">
+
+						<label id="pwd_lavel" for="userid">User<span class="requried_msg">(必須)</span>:</label>
+						<div class="smart_errors"><span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" class="error_msg"></span></div>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="text" class="form_input" id="userid" name="userid" th:value="*{userid}"></td>
 				</tr>
 
 				<tr>
-					<td id="pwd_error"><label id="pwd_lavel" for="password">PassWord<span class="requried_msg">(必須)</span>:</label><div><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error_msg"></span></div></td>
+					<td id="pwd_error">
+						<label id="pwd_lavel" for="password">Password<span class="requried_msg">(必須)</span>:</label>
+						<div  class="smart_errors"><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error_msg"></span></div>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="password"  class="form_input" id="password" name="password" th:value="*{password}"></td>
 				</tr>
 
 				<tr>
-					<td><label for="lastname">苗字<span class="requried_msg">(必須)</span>:</label><span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="error_msg"></span></td>
+					<td id="pwd_error">
+						<label id="pwd_lavel" for="lastname">苗字<span class="requried_msg">(必須)</span>:</label>
+						<div  class="smart_errors"><span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="error_msg"></span></div>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="text"  class="form_input" id="lastname" name="lastname" th:value="*{lastname}"></td>
 				</tr>
 
 				<tr>
-					<td><label for="firstname">名前<span class="requried_msg">(必須)</span>:</label><span th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" class="error_msg"></span></td>
+					<td id="pwd_error">
+						<label id="pwd_lavel" for="firstname">名前<span class="requried_msg">(必須)</span>:</label>
+						<div  class="smart_errors"><span th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" class="error_msg"></span></div>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="text"  class="form_input" id="firstname" name="firstname" th:value="*{firstname}"></td>
 				</tr>
 
 				<tr>
-					<td><span>部署<span class="requried_msg">(必須)</span>：</span><span th:if="${#fields.hasErrors('rolename')}" th:errors="*{rolename}"  class="error_msg"></span></td>
+					<td id="pwd_error">
+						<span id="pwd_lavel">部署<span class="requried_msg">(必須)</span>：</span>
+						<div  class="smart_errors"><span th:if="${#fields.hasErrors('rolename')}" th:errors="*{rolename}"  class="error_msg"></span></div>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="radio"  id="system" value="システム部" th:field="*{rolename}">
@@ -59,7 +76,12 @@
 					</td>
 				</tr>
 				<tr id="form_go">
-					<td><hr><button  onclick="location.href='/insert'" >クリア</button><input type="submit"  name="go" value="登録"></td>
+					<td>
+						<hr>
+						<p class="topic">Userは英数字4文字<br>Passwordは数字のみ6桁以上20桁未満です</p>
+						<button  onclick="location.href='/insert'" >クリア</button>
+						<input type="submit"  name="go" value="登録">
+					</td>
 				</tr>
 				<tr id="form_go">
 					<td><a href="login/loginForm">ログイン画面へ戻る</a></td>

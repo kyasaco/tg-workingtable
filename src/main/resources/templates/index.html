@@ -25,6 +25,7 @@
 
 	<main>
 			<div class="debug2">
+				<div>
 						<div class="main-text-custom">
 						<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
 								<!-- 実行時の日付 -->
@@ -40,12 +41,17 @@
 								<p th:text="${errmsg}"></p>
 								<div class="worktime-block">
 									<label>従業時間：</label>
-									<input class="timeDial" th:field="*{startTime}" type="time" value="hh:mm" name="startTime"step="1800" required> ～
-									<input class="timeDial" th:field="*{endTime}"type="time" value="hh:mm" name="endTime" step="1800" required>
-									<input type="submit" value="登録" class="submit-button">
+										<select name="startTime">
+											<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '09:00'}"></option>
+										</select>～
+										<select name="endTime">
+											<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '18:00'}"></option>
+										</select>
+									<input type="submit" value="登録" class="submit-button" name="insert">
 								</div>
 						</form>
 						</div>
+				</div>
 			<table class="DateTable">
 				<thead class="DateTable-thead">
 					<th class="DateTable-Column">日付</th>
@@ -60,13 +66,30 @@
 					</tr>
 				</tbody>
 			</table>
-			<form th:action="@{/logout}" method="post">
-				<button>ログアウト</button>
-			</form>
+			<div class="main-text-custom">
+			<form th:action="@{/download}" method="post" >
+					<table>
+					<tbody>
+					<tr>
+						<td><label for="filename">ファイル名：</label></td>
+						<td><input type="text" name="filename" id="filename"></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><input type="submit" value="ダウンロード(.csv)" ></td>
+					</tr>
+					</tbody>
+					</table>
+				</form>
+			</div>
 			</div>
 	</main>
 
 	<footer>
+				<form th:action="@{/logout}" method="post">
+					<button>ログアウト</button>
+				</form>
+
 				<div class="debug3">
 							<span>footer</span>
 				</div>

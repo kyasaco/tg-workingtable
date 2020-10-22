@@ -15,19 +15,20 @@ import lombok.Setter;
 @Setter
 public class InsertForm {
 
-	@NotBlank(message = "必須です")
+	@Length(min = 4,max = 4,message = "4文字のみです")
+	@NotBlank(message = "入力必須項目です")
 	private String userid;
 
 	@Length(min = 6 , message = "長さは6文字以上必要です")
 	@Pattern(regexp = "\\d+",message = "使えるのは数字のみです")
 	private String password;
 
-	@NotBlank(message = "必須です")
+	@NotBlank(message = "入力必須項目です")
 	private String firstname;
 
-	@NotBlank(message = "必須です")
+	@NotBlank(message = "入力必須項目です")
 	private String lastname;
 
-	@NotNull(message = "必須です")
+	@NotNull(message = "入力必須項目です")
 	private RoleName rolename = RoleName.システム部;
 }
