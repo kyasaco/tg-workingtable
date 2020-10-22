@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +23,25 @@ import lombok.AllArgsConstructor;
 public class DateService {
 	private final DateRepository repository;
 
-	//idで一件取得
+	/*idで一件取得*/
 	public Optional<DateEntity> findOne(Integer id) {
 		return repository.findById(id);
 	}
 	//useridとtodayに一致する一件の取得
 	public List<DateEntity> findOneTandWID(Integer id,Date today) {
 		return repository.findQueryTandWID(id, today);
+	}
+	/*指定した月の勤務表一覧表示*/
+	public List<DateEntity> findQueryMonth(String Month,Integer id){
+		return repository.findQueryByMonth(Month,id);
+	}
+	/*?????????????*/
+	public Page<DateEntity> getAllDate(Pageable pageable){
+		return repository.findAll(pageable);
+	}
+	/*指定した月の勤務表一覧表示*/
+	public List<DateEntity> findQueryMonth2(String Month,Integer id){
+		return repository.findQueryByMonth_2(Month,id);
 	}
 	//idで一件削除
 	public void DeleteOne(Integer id) {

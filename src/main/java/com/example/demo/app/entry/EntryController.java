@@ -56,6 +56,9 @@ public class EntryController {
 	private final DateValidation dateValidation;
 	private final DownloadHelper downloadHelper;
 
+	/*定数*/
+	private final LocalDate NOW_DATE = LocalDate.now();
+
 	/*開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)*/
 	final Map<String,String> SELECT_TIME = Collections.unmodifiableMap(new LinkedHashMap<String, String>(){
 		{
@@ -71,6 +74,8 @@ public class EntryController {
 			}
 		}
 	});
+
+
 	/*データをCSV化*/
 	public String getCsvText(WorkersUserDetails workersUserDetails) throws JsonProcessingException{
 		CsvMapper mapper = new CsvMapper();
@@ -95,7 +100,7 @@ public class EntryController {
 		 EntryForm entryForm = new EntryForm();
 		return entryForm;
 	}
-
+	//マッピング処理---------------------------------------------------------------------------------------------------------------------------------------
 	/*初期表示。パラメータの日付を受け取る*/
 	@GetMapping({"/","/{today}"})
 	public ModelAndView EntryView(
@@ -104,15 +109,15 @@ public class EntryController {
 	ModelAndView  mav,
 	@AuthenticationPrincipal WorkersUserDetails workersUserDetails)
 	{
-		if(today==null)
-		{
+		if(today==null){
 			today=LocalDate.now();
 		}
 
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today",today);
 		mav.setViewName("index");
-		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
+//		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
+		List<DateEntity> datedata = dateservice.findQueryMonth(String.valueOf(NOW_DATE.getMonth().ordinal() + 1),Integer.valueOf(workersUserDetails.getUsername()));
 		mav.addObject("DateTableData", datedata);
 		mav.addObject("Luser", workersUserDetails.getUser());
 
