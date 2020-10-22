@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>カレンダー</title>
+	<title>勤務表入力画面</title>
 
 	<!-- import ResetCss & CDN & Local　↓ -->
 	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
@@ -14,11 +14,12 @@
 	<header>
 		<div class="debug1">
 				<nav class="nav-baner">
-						<span class="nav-welcome" th:text = "|${Luser.lastname}さんようこそ|">〇〇さんようこそ</span>
-						<span sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span>
-						<h1>＜勤務表＞</h1>
-						<span sec:authorize="${hasRole('ADMIN')}"><button onclick="location.href='/Admin'">管理画面へ</button></span>
-						<input type="hidden" form="form1" th:value="${Luser.userid}" name="workersId">
+					<div id="Admin_nav">
+						<span th:text = "|ようこそ${Luser.lastname}さん|">〇〇さんようこそ</span>
+						<span class="nav-welcome"  sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span><button onclick="location.href='/Admin'" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
+					</div>
+					<h1>＜勤務表＞</h1>
+					<input type="hidden" form="form1" th:value="${Luser.userid}" name="workersId">
 				</nav>
 		</div>
 	</header>
@@ -51,7 +52,6 @@
 								</div>
 						</form>
 						</div>
-				</div>
 			<table class="DateTable">
 				<thead class="DateTable-thead">
 					<th class="DateTable-Column">日付</th>
@@ -66,13 +66,15 @@
 					</tr>
 				</tbody>
 			</table>
-			<div class="main-text-custom">
+			</div>
+			<div  class="main-text-custom-right" >
+			<p class="download_topic">-勤務表をcsv形式でダウンロードできます</p>
 			<form th:action="@{/download}" method="post" >
 					<table>
 					<tbody>
 					<tr>
 						<td><label for="filename">ファイル名：</label></td>
-						<td><input type="text" name="filename" id="filename"></td>
+						<td><input type="text" name="filename" id="filename" value=""></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -81,18 +83,16 @@
 					</tbody>
 					</table>
 				</form>
-			</div>
+				</div>
 			</div>
 	</main>
 
 	<footer>
-				<form th:action="@{/logout}" method="post">
+		<div class="debug3">
+			<form th:action="@{/logout}" method="post">
 					<button>ログアウト</button>
 				</form>
-
-				<div class="debug3">
-							<span>footer</span>
-				</div>
+		</div>
 	</footer>
 <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
 <!-- import js.file CDN↓ -->

@@ -52,7 +52,6 @@ import lombok.AllArgsConstructor;
 public class EntryController {
 
 	/*DIするサービスクラスを宣言*/
-	private final UserService userservice;
 	private final DateService dateservice;
 	private final DateValidation dateValidation;
 	private final DownloadHelper downloadHelper;
@@ -109,6 +108,7 @@ public class EntryController {
 		{
 			today=LocalDate.now();
 		}
+
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today",today);
 		mav.setViewName("index");
@@ -140,11 +140,16 @@ public class EntryController {
 		return mav;
 	}
 
+	/*勤務表csvダウンロードのマッピングを行う*/
 	@PostMapping("/download")
 	public ResponseEntity<byte[]> download(
-			@AuthenticationPrincipal WorkersUserDetails workersUserDetails) throws IOException{
+			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
+			@RequestParam("filename")String filename) throws IOException{
+		if(filename == "") {
+			filename = "ユーザー"+workersUserDetails.getUsername()+"の勤務表";
+		}
 		HttpHeaders headers = new HttpHeaders();
-		downloadHelper.addContentDisposition(headers, "テスト.csv");
+		downloadHelper.addContentDisposition(headers, filename+".csv");
 		return new ResponseEntity<>(getCsvText(workersUserDetails).getBytes("MS932"),headers,HttpStatus.OK);
 	}
 
