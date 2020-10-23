@@ -27,7 +27,7 @@ public class EntryForm {
 	private  String endTime = "17:00";
 	@NotNull(message = "NULLは不可")
 	private String today;
-	
+
 	//String=>LocalTime=>Time
 	public Time getTimeClassAmTime()
 	{
@@ -42,7 +42,7 @@ public class EntryForm {
 		Time sqlTime = Time.valueOf(time);
 		return sqlTime;
 	}
-	
+
 	//String=>LocalDate=>Date
 	public Date getDtoday()
 	{
@@ -50,15 +50,21 @@ public class EntryForm {
 		Date sqlDate = Date.valueOf(date);
 		return sqlDate;
 	}
-	
+	//String=>LocalDate
+	public LocalDate getLDtoday()
+	{
+		LocalDate date= LocalDate.parse(this.today);
+		return date;
+	}
+
 //	public String getResult() {
 //		String amTTime = getAmTime();
 //		String pmTTime = getPmTime();
 //		String result2 = "00:00";
 //		SimpleDateFormat sdf= new SimpleDateFormat("HH:mm");
 //		try {
-//			Date date1 = sdf.parse(amTTime);	
-//			Date date2 = sdf.parse(pmTTime);	
+//			Date date1 = sdf.parse(amTTime);
+//			Date date2 = sdf.parse(pmTTime);
 //			long calTTime = (date2.getTime())-(date1.getTime());
 //			//calHour
 //			int calHour= (int)(calTTime/1000/60/60);
@@ -68,7 +74,7 @@ public class EntryForm {
 //			// TODO: handle exception
 //			e.printStackTrace();
 //		}
-//		
+//
 //		return this.result = result2;
 //	}
 

@@ -41,6 +41,9 @@ public class DateService {
 	}
 	/*?????????????*/
 	public Page<DateEntity> findQueryMonthForPage(String Month,Integer id,Pageable pageable){
+		if(Integer.valueOf(Month) < 10) {
+			Month = "0" + Month;
+		}
 		return repository.findQueryByMonthForPage(Month, id, pageable);
 	}
 	/*指定した月の勤務表一覧表示*/

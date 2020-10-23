@@ -11,98 +11,82 @@
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body th:with="user=${#authentication.principal.user}">
-	<header>
-		<div class="debug1">
-				<nav class="nav-baner">
-					<div id="Admin_nav">
-						<span th:text = "|ようこそ${Luser.lastname}さん|">〇〇さんようこそ</span>
-						<span class="nav-welcome"  sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span><button onclick="location.href='/Admin'" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
+<header>
+	<div class="debug1">
+		<nav class="nav-baner">
+			<div id="Admin_nav">
+				<span th:text = "|ようこそ${Luser.lastname}さん|">〇〇さんようこそ</span>
+				<span class="nav-welcome"  sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span><button onclick="location.href='/Admin'" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
+			</div>
+			<h1>＜勤務表＞</h1>
+			<input type="hidden" form="form1" th:value="${Luser.userid}" name="workersId">
+		</nav>
+	</div>
+</header>
+
+<main>
+	<div class="debug2">
+		<div>
+			<div class="main-text-custom">
+				<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
+					<!-- 実行時の日付 -->
+					<label th:text="|日付：${today}|"> </label>
+					<input type="hidden" form="form1" th:value="${today}" name="today">
+					<a th:href="@{/calendar/(todayCarendar=${today})}">カレンダー</a>
+					<!-- 部署 -->
+					<div class="busyo-block">
+						<label >部署：</label><label th:text="${Luser.rolename}"></label><span id="insert_errors" th:text="${errormsg}" ></span>
 					</div>
-					<h1>＜勤務表＞</h1>
-					<input type="hidden" form="form1" th:value="${Luser.userid}" name="workersId">
-				</nav>
-		</div>
-	</header>
-
-	<main>
-			<div class="debug2">
-				<div>
-						<div class="main-text-custom">
-						<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
-								<!-- 実行時の日付 -->
-								<label th:text="|日付：${today}|"> </label>
-								<input type="hidden" form="form1" th:value="${today}" name="today">
-								<a href="./calendar">カレンダー</a>
-
-								<!-- 部署 -->
-								<div class="busyo-block">
-									<label >部署：</label><label th:text="${Luser.rolename}"></label><span id="insert_errors" th:text="${errormsg}" ></span>
-								</div>
-								<!-- 従業時間 -->
-								<p th:text="${errmsg}"></p>
-								<div class="worktime-block">
-									<label>従業時間：</label>
-										<select name="startTime">
-											<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '09:00'}"></option>
-										</select>～
-										<select name="endTime">
-											<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '18:00'}"></option>
-										</select>
-									<input type="submit" value="登録" class="submit-button" name="insert">
-								</div>
-						</form>
-						</div>
-			<table class="DateTable">
-				<thead class="DateTable-thead">
-					<th class="DateTable-Column">日付</th>
-					<th class="DateTable-Column">勤務開始時間</th>
-					<th class="DateTable-Column">勤務終了時間</th>
-				</thead>
-				<tbody class="DateTable-tbody">
-					<tr th:each="data:${DateTableData}">
-						<td th:text="${data.today}" class="DateTable-Data"></td>
-						<td th:text="${data.startTime}" class="DateTable-Data"></td>
-						<td th:text="${data.endTime}" class="DateTable-Data"></td>
-					</tr>
-				</tbody>
-			</table>
+					<!-- 従業時間 -->
+					<p th:text="${errmsg}"></p>
+					<div class="worktime-block">
+						<label>従業時間：</label>
+						<select name="startTime">
+							<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '09:00'}"></option>
+						</select>～
+						<select name="endTime">
+							<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '18:00'}"></option>
+						</select>
+						<input type="submit" value="登録" class="submit-button" name="insert">
+					</div>
+				</form>
+			</div>
 <!-- ******************************************************************* -->
-			<div>
-				<ul>
-					<li style="display:inline">
-						<span th:if="${page.first}">&lt;&lt;前</span>
-						<a
-							th:if="${!page.first}"
-							th:href="@{/(page = ${page.number} - 1)}"
-						>
-							&lt;&lt;前
-						</a>
-					</li>
-					<li
-						th:each="i : ${#numbers.sequence(0,page.totalPages - 1)}"
-						style="display:inline; margin-left:10px;"
-					>
-						<span th:if="${i} == ${page.number}" th:text = "${i + 1}">1</span>
-						<a
-							th:if="${i} != ${page.number}"
-							th:href="@{/(page = ${i})}"
-						>
-							<span th:text="${i+1}">1</span>
-						</a>
-					</li>
-					<li style="display:inline; margin-left:10px;">
-						<span th:if="${page.last}">次&gt;&gt;</span>
-						<a
-							th:if="${!page.last}"
-							th:href="@{/(page = (${page.number} + 1))}"
-						>
-							次&gt;&gt;
-						</a>
-					</li>
-				</ul>
-			</div>
+		<div>
+			<ul>
+				<li class="page_left_arrow">
+					<a th:href="@{'/' + ${today.minusMonths(1)}}">
+						&lt;&lt;前
+					</a>
+				</li>
+				<li	 class="page_numbers">
+					<a th:href="@{/}">
+						<span >今月</span>
+					</a>
+				</li>
+				<li class="page_right_arrow">
+					<a th:href="@{'/' + ${today.plusMonths(1)}}">
+						次&gt;&gt;
+					</a>
+				</li>
+			</ul>
+		</div>
 <!-- ---------------------------------------------------------------------------------------- -->
-			</div>
+		<table class="DateTable">
+			<thead class="DateTable-thead">
+				<th class="DateTable-Column">日付</th>
+				<th class="DateTable-Column">勤務開始時間</th>
+				<th class="DateTable-Column">勤務終了時間</th>
+			</thead>
+			<tbody class="DateTable-tbody">
+				<tr th:each="data:${DateTableData}">
+					<td th:text="${data.today}" class="DateTable-Data"></td>
+					<td th:text="${data.startTime}" class="DateTable-Data"></td>
+					<td th:text="${data.endTime}" class="DateTable-Data"></td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
 			<div  class="main-text-custom-right" >
 			<p class="download_topic">-勤務表をcsv形式でダウンロードできます</p>
 			<form th:action="@{/download}" method="post" >

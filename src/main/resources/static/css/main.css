@@ -190,3 +190,18 @@ h2{
 .nav-welcome{
 	margin-right:5px;
 }
+/*ページングデザイン*/
+.page_left_arrow{
+	display:inline;
+}
+.page_right_arrow{
+	display:inline;
+	margin-left:10px;
+}
+.page_numbers{
+	display:inline;
+	margin-left:10px;
+}
+.seventy_five{
+	font-size:75%;
+}

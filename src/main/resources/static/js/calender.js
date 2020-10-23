@@ -7,6 +7,8 @@
 */
 
 /*グローバル変数cnt=>土日判定用*/
+
+
 var cnt = 0;
 var Calendar = function(model, options, date){
   // Default Values
@@ -31,8 +33,8 @@ var Calendar = function(model, options, date){
   }
 
   model?this.Model=model:this.Model={};
-  this.Today = new Date();
-
+  var param = (new URL(document.location)).searchParams;
+ this.Today = new Date(param.get('todayCarendar'));
   this.Selected = this.Today
   this.Today.Month = this.Today.getMonth();
   this.Today.Year = this.Today.getFullYear();
@@ -336,17 +338,17 @@ function createCalendar(calendar, element, adjuster){
 //自作：クリックした年月日をアラート表示 ver1.0.0
 //選択月以外をクリックした場合は年月日がでないように更新 ver2.0
 	$('.cld-number').click(function(){
-		
+
 		var parent2 =$(this).parent().attr('class');
 		if(parent2 == 'cld-day currMonth' || parent2 == 'cld-day currMonth today')
-		{	
+		{
 			var Year = calendar.Selected.Year;
 			var Month = ('00'+(calendar.Selected.Month + 1)).slice(-2);
 			var Day = ('00'+(parseInt(this.textContent))).slice(-2);
 			var today = Year+'-'+Month+'-'+Day;
-			alert(	today);	
-			
-			location.href = './' + today;		
+			alert(	today);
+
+			location.href = './' + today;
 		}
 		else
 		{
@@ -356,10 +358,10 @@ function createCalendar(calendar, element, adjuster){
 		//alert(calendar.Selected.Year)
 		//alert(calendar.Selected.Month + 1)
 	});
-	
+
 	function DaySettingFunc(cnt)
 	{
-		
+
 	}
 }
 

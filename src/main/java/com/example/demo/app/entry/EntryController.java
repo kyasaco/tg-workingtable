@@ -57,29 +57,27 @@ import net.bytebuddy.asm.Advice.OffsetMapping.Sort;
 public class EntryController {
 
 	/*DIするサービスクラスを宣言*/
+
 	private final DateService dateservice;
 	private final DateValidation dateValidation;
 	private final DownloadHelper downloadHelper;
 
 	/*定数*/
-	private final LocalDate NOW_DATE = LocalDate.now();
 
 	/*開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)*/
 	final Map<String,String> SELECT_TIME = Collections.unmodifiableMap(new LinkedHashMap<String, String>(){
 		{
 			for(Integer i = 0; i < 24; i++) {
-				if(i>9) {
+				if(i>9){
 					put(i.toString()+":00", i.toString()+":00");
 					put(i.toString()+":30", i.toString()+":30");
-				}
-				else {
+				}else{
 					put("0"+i.toString()+":00", "0"+i.toString()+":00");
 					put("0"+i.toString()+":30", "0"+i.toString()+":30");
 				}
 			}
 		}
 	});
-
 
 	/*データをCSV化*/
 	public String getCsvText(WorkersUserDetails workersUserDetails) throws JsonProcessingException{
@@ -102,18 +100,18 @@ public class EntryController {
 	/*Formの初期化と宣言*/
 	@ModelAttribute("EntryForm")
 	EntryForm setUpForm() {
-		 EntryForm entryForm = new EntryForm();
+		EntryForm entryForm = new EntryForm();
 		return entryForm;
 	}
 	//マッピング処理---------------------------------------------------------------------------------------------------------------------------------------
 	/*初期表示。パラメータの日付を受け取る*/
-	@GetMapping({"/","/{today}"})
+	@GetMapping({"/","/{today}","/calendar/{today}"})
 	public ModelAndView EntryView(
 	@PathVariable(name="today",required = false)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate today,
 	ModelAndView  mav,
 	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
-	@PageableDefault(page = 0,size = 10,sort = {"today"},direction =Direction.ASC)Pageable pageable)
+	@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable)
 	{
 		if(today==null){
 			today=LocalDate.now();
@@ -123,11 +121,10 @@ public class EntryController {
 		mav.addObject("today",today);
 		mav.setViewName("index");
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
-				String.valueOf(NOW_DATE.getMonth().ordinal() + 1),
+				String.valueOf(today.getMonthValue()),
 				Integer.valueOf(workersUserDetails.getUsername()),
 				pageable);
 
-		mav.addObject("page", datedata);
 		mav.addObject("DateTableData", datedata.getContent());
 		mav.addObject("Luser", workersUserDetails.getUser());
 
@@ -144,15 +141,18 @@ public class EntryController {
 			@PageableDefault(page = 0,size = 10)Pageable pageable)
 	{
 		mav.addObject("select_a",SELECT_TIME);
-		mav.addObject("today", entryForm.getDtoday());
+		mav.addObject("today", entryForm.getLDtoday());
 		mav.setViewName("index");
 		mav.addObject("Luser", workersUserDetails.getUser());
 		if(!result.hasErrors()){
 			String errormessage = dateValidation.ErrorSwitching(dateservice.SaveFlush(entryForm));
 			mav.addObject("errormsg", errormessage);
 		}
-		Page<DateEntity> datedata = dateservice.getAllDate(pageable);
-		mav.addObject("page", datedata);
+		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
+				String.valueOf(entryForm.getLDtoday().getMonthValue()),
+				Integer.valueOf(workersUserDetails.getUsername()),
+				pageable);
+
 		mav.addObject("DateTableData", datedata.getContent());
 		return mav;
 	}
