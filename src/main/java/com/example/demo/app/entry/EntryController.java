@@ -10,6 +10,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,6 +48,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 
 import io.github.classgraph.AnnotationEnumValue;
 import lombok.AllArgsConstructor;
+import net.bytebuddy.asm.Advice.OffsetMapping.Sort;
 
 /*メインコントローラー：ログインに成功したユーザーの勤務表を出力するメイン画面*/
 @RequestMapping("/")
@@ -107,7 +112,8 @@ public class EntryController {
 	@PathVariable(name="today",required = false)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate today,
 	ModelAndView  mav,
-	@AuthenticationPrincipal WorkersUserDetails workersUserDetails)
+	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
+	@PageableDefault(page = 0,size = 10,sort = {"today"},direction =Direction.ASC)Pageable pageable)
 	{
 		if(today==null){
 			today=LocalDate.now();
@@ -116,9 +122,13 @@ public class EntryController {
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today",today);
 		mav.setViewName("index");
-//		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
-		List<DateEntity> datedata = dateservice.findQueryMonth(String.valueOf(NOW_DATE.getMonth().ordinal() + 1),Integer.valueOf(workersUserDetails.getUsername()));
-		mav.addObject("DateTableData", datedata);
+		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
+				String.valueOf(NOW_DATE.getMonth().ordinal() + 1),
+				Integer.valueOf(workersUserDetails.getUsername()),
+				pageable);
+
+		mav.addObject("page", datedata);
+		mav.addObject("DateTableData", datedata.getContent());
 		mav.addObject("Luser", workersUserDetails.getUser());
 
 		return mav;
@@ -130,7 +140,8 @@ public class EntryController {
 			@Validated EntryForm entryForm,
 			BindingResult result,
 			ModelAndView  mav,
-			@AuthenticationPrincipal WorkersUserDetails workersUserDetails)
+			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
+			@PageableDefault(page = 0,size = 10)Pageable pageable)
 	{
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today", entryForm.getDtoday());
@@ -140,8 +151,9 @@ public class EntryController {
 			String errormessage = dateValidation.ErrorSwitching(dateservice.SaveFlush(entryForm));
 			mav.addObject("errormsg", errormessage);
 		}
-		List<DateEntity> datedata = dateservice.findByWorkersId(workersUserDetails.getUsername());
-		mav.addObject("DateTableData", datedata);
+		Page<DateEntity> datedata = dateservice.getAllDate(pageable);
+		mav.addObject("page", datedata);
+		mav.addObject("DateTableData", datedata.getContent());
 		return mav;
 	}
 

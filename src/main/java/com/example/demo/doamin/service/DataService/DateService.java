@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +38,10 @@ public class DateService {
 	/*?????????????*/
 	public Page<DateEntity> getAllDate(Pageable pageable){
 		return repository.findAll(pageable);
+	}
+	/*?????????????*/
+	public Page<DateEntity> findQueryMonthForPage(String Month,Integer id,Pageable pageable){
+		return repository.findQueryByMonthForPage(Month, id, pageable);
 	}
 	/*指定した月の勤務表一覧表示*/
 	public List<DateEntity> findQueryMonth2(String Month,Integer id){

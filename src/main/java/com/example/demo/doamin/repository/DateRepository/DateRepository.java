@@ -4,8 +4,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -37,6 +37,10 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	 */
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE \'2020-\' + ?1 + \'-%\' AND workers_id = ?2",nativeQuery=true)
 	List<DateEntity> findQueryByMonth(String Month,Integer id);
+
+	/*page用*/
+	@Query(value="SELECT * FROM Date7 WHERE today LIKE \'2020-\' + ?1 + \'-%\' AND workers_id = ?2",nativeQuery=true)
+	Page<DateEntity> findQueryByMonthForPage(String Month,Integer id,Pageable pageable);
 
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 AND workers_id = ?2",nativeQuery=true)
 	List<DateEntity> findQueryByMonth_2(String Month,Integer id);
