@@ -75,8 +75,15 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			.and()
 			.exceptionHandling().accessDeniedPage("/ErrorPage")
 			.and()
+			//ログイン情報をクッキーに保存するかどうか
+			//rememberMeCookieName:クッキー名
+			//tokenValiditySeconds:デフォルトは14日。秒にて指定する
+			//ログアウトすると破棄される
+			.rememberMe().rememberMeCookieName("remembered_working_user")
+									.tokenValiditySeconds(604800)
+			.and()
+			/*Spring SecurityではセッションIDの再発行、CSRF対策はデフォルト*/
 			.sessionManagement().maximumSessions(1).expiredUrl("/loginForm").expiredSessionStrategy(new MySessionInformation());
-
 
 	}
 

@@ -346,13 +346,32 @@ function createCalendar(calendar, element, adjuster){
 			var Month = ('00'+(calendar.Selected.Month + 1)).slice(-2);
 			var Day = ('00'+(parseInt(this.textContent))).slice(-2);
 			var today = Year+'-'+Month+'-'+Day;
-			alert(	today);
 
 			location.href = './' + today;
-		}
-		else
-		{
-			alert("ダメ");
+		}else if(parent2 == 'cld-day prevMonth'){
+            var Year = calendar.Selected.Year;
+            var Month = ('00'+(calendar.Selected.Month)).slice(-2);
+            if(Month < 1){
+                Year -= 1;
+                Month = '12';
+            }
+            var Day = ('00'+(parseInt(this.textContent))).slice(-2);
+            var today = Year+'-'+Month+'-'+Day;
+
+            location.href = './' + today;
+		  }else if(parent2 == 'cld-day nextMonth'){
+            var Year = calendar.Selected.Year;
+            var Month = ('00'+(calendar.Selected.Month + 2)).slice(-2);
+            if(Month > 12){
+                Year += 1;
+                Month = '01';
+            }
+
+            var Day = ('00'+(parseInt(this.textContent))).slice(-2);
+            var today = Year+'-'+Month+'-'+Day;
+            location.href = './' + today;
+		}else{
+			alert("休日です");
 		}
 		//デバッグ用
 		//alert(calendar.Selected.Year)

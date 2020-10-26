@@ -31,9 +31,11 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 
 
 	/**
-	 * @param Month
-	 * @param id
-	 * @return 引数の月とユーザーIDが一致したデータリスト
+	 * 月とユーザーIDが一致したデータリストを取得する
+	 *
+	 * @param Month 月
+	 * @param id ユーザーID
+	 * @return Monthとidが一致したデータリスト
 	 */
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE \'2020-\' + ?1 + \'-%\' AND workers_id = ?2",nativeQuery=true)
 	List<DateEntity> findQueryByMonth(String Month,Integer id);

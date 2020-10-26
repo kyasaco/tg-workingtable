@@ -1,55 +1,59 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>カレンダー</title>
-	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
-	<!-- import js.file CDN↓ -->
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
-	<!-- import js.file Local↓ -->
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>カレンダー</title>
+  <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+  <!-- import js.file CDN↓ -->
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
+  <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
+  <!-- import js.file Local↓ -->
 
 
-	<!-- import ResetCss & CDN & Local　↓ -->
-	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
-	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
+  <!-- import ResetCss & CDN & Local　↓ -->
+  <link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
+  <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
+  <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div class="form_custom">
-		<h2>ログインフォーム</h2>
-		<p th:if="${param.error}" class="error_msg" >もう一度やりなおしてください</p>
-		<form th:action="@{/login}" method="post">
-			<table>
-			<tbody>
-				<tr>
-					<td><hr><label for="username">User:</label></td>
-				</tr>
-				<tr>
-					<td><input type="text" class="form_input" id="username" name="username" value="2222"></td>
-				</tr>
-				<tr>
-					<td><label for="password">PassWord:</label></td>
-				</tr>
-				<tr>
-					<td><input type="password"  id="password" name="password" value="123456789"></td>
-				</tr>
+  <div class="form_custom">
+    <h2>ログインフォーム</h2>
+    <p th:if="${param.error}" class="error_msg" >もう一度やりなおしてください</p>
+    <!-- th:action="@{/login}"でthymeleaf側が自動的にCSRF対策を行う -->
+    <form th:action="@{/login}" method="post">
+      <table>
+      <tbody>
+        <tr>
+          <td><hr><label for="username">User:</label></td>
+        </tr>
+        <tr>
+          <td><input type="text" class="form_input" id="username" name="username" value="2222"></td>
+        </tr>
+        <tr>
+          <td><label for="password">PassWord:</label></td>
+        </tr>
+        <tr>
+          <td><input type="password"  id="password" name="password" value="123456789"></td>
+        </tr>
 
-			</tbody>
+      </tbody>
 
-			<tfoot>
-				<tr id="form_go">
-					<td><hr><button type="submit">ログイン</button></td>
-				</tr>
-				<tr id="form_go">
-					<td><a href="../insertForm">新規登録へ</a></td>
-				</tr>
-			</tfoot>
-			</table>
+      <tfoot>
+        <tr id="form_go">
+            <td>
+                <hr><span class="requried_msg">ログインを保持する</span><input type="checkbox"  name="remember-me">
+                <button type="submit">ログイン</button>
+            </td>
+        </tr>
+        <tr id="form_go">
+          <td><a href="../insertForm">新規登録へ</a></td>
+        </tr>
+      </tfoot>
+      </table>
 
-		</form>
+    </form>
 
-	</div>
+  </div>
 </body>
 </html>

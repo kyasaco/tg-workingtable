@@ -90,6 +90,7 @@
 			<div  class="main-text-custom-right" >
 			<p class="download_topic">-勤務表をcsv形式でダウンロードできます</p>
 			<form th:action="@{/download}" method="post" >
+			     <input type="hidden" name="D_today" th:value="${today}">
 					<table>
 					<tbody>
 					<tr>

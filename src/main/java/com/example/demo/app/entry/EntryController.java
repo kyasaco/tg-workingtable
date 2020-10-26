@@ -34,6 +34,7 @@ import org.thymeleaf.expression.Lists;
 import com.example.demo.app.login.LoginForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
+import com.example.demo.doamin.model.OutDateSub;
 import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.user.UserService;
@@ -80,7 +81,7 @@ public class EntryController {
 	});
 
 	/*データをCSV化*/
-	public String getCsvText(WorkersUserDetails workersUserDetails) throws JsonProcessingException{
+	public String getCsvText(WorkersUserDetails workersUserDetails,LocalDate today) throws JsonProcessingException{
 		CsvMapper mapper = new CsvMapper();
 		/*
 		 * ObjectMapper(CsvMapper)はDateをシリアル値化するときデフォルトではTimestampで変換するので一度.disableで解除
@@ -92,7 +93,10 @@ public class EntryController {
 		//ヘッダをつける
 		CsvSchema schema = mapper.schemaFor(OutDate.class).withHeader();
 
-		List<DateEntity> datecsv = dateservice.findByWorkersId(workersUserDetails.getUsername());
+//		List<DateEntity> datecsv = dateservice.findByWorkersId(workersUserDetails.getUsername());
+		List<DateEntity> datecsv = dateservice.findQueryMonth(
+				String.valueOf(today.getMonthValue()),
+				Integer.valueOf(workersUserDetails.getUsername()));
 		String a = mapper.writer(schema).writeValueAsString(datecsv);
 		return  a;
 	}
@@ -138,7 +142,7 @@ public class EntryController {
 			BindingResult result,
 			ModelAndView  mav,
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
-			@PageableDefault(page = 0,size = 10)Pageable pageable)
+			@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable)
 	{
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today", entryForm.getLDtoday());
@@ -161,13 +165,15 @@ public class EntryController {
 	@PostMapping("/download")
 	public ResponseEntity<byte[]> download(
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
-			@RequestParam("filename")String filename) throws IOException{
+			@RequestParam("filename")String filename,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+			@RequestParam("D_today")LocalDate today) throws IOException{
 		if(filename == "") {
 			filename = "ユーザー"+workersUserDetails.getUsername()+"の勤務表";
 		}
 		HttpHeaders headers = new HttpHeaders();
 		downloadHelper.addContentDisposition(headers, filename+".csv");
-		return new ResponseEntity<>(getCsvText(workersUserDetails).getBytes("MS932"),headers,HttpStatus.OK);
+		return new ResponseEntity<>(getCsvText(workersUserDetails,today).getBytes("MS932"),headers,HttpStatus.OK);
 	}
 
 }

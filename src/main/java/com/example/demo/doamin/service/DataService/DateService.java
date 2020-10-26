@@ -3,6 +3,7 @@ package com.example.demo.doamin.service.DataService;
 import java.sql.Date;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,17 +30,46 @@ public class DateService {
 	}
 	//useridとtodayに一致する一件の取得
 	public List<DateEntity> findOneTandWID(Integer id,Date today) {
+
 		return repository.findQueryTandWID(id, today);
 	}
-	/*指定した月の勤務表一覧表示*/
+
+	/**
+	 * @param Month
+	 * @param id
+	 * @return 選択した月と認証しているユーザーIDでデータを取得する
+	 */
 	public List<DateEntity> findQueryMonth(String Month,Integer id){
+		if(Integer.valueOf(Month) < 10) {
+			Month = "0" + Month;
+		}
 		return repository.findQueryByMonth(Month,id);
 	}
-	/*?????????????*/
+	public List<DateEntity> findQueryMonthDay(String Month,Integer id){
+		if(Integer.valueOf(Month) < 10) {
+			Month = "0" + Month;
+		}
+		List<DateEntity> av = repository.findQueryByMonth(Month,id);
+		Calendar clCalendar = Calendar.getInstance();
+		clCalendar.setTime(av.get(0).getToday());
+		clCalendar.get(Calendar.DAY_OF_WEEK);
+		return av;
+	}
+
+	/**
+	 * @param pageable
+	 * @return ページング用。全勤務表データを取得
+	 */
 	public Page<DateEntity> getAllDate(Pageable pageable){
 		return repository.findAll(pageable);
 	}
-	/*?????????????*/
+
+	/**
+	 * @param Month
+	 * @param id
+	 * @param pageable
+	 * @return ページング用。選択した月と認証しているユーザーIDでデータを取得する
+	 */
 	public Page<DateEntity> findQueryMonthForPage(String Month,Integer id,Pageable pageable){
 		if(Integer.valueOf(Month) < 10) {
 			Month = "0" + Month;
