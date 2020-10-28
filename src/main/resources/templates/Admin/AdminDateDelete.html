@@ -14,14 +14,15 @@
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<form th:action="@{search}" method="post" >
+<form th:action="@{/Admin/DeleteDate/search}" method="post" >
 <table>
-	<tr><td>従業員ID：</td><td><input type="text" name="userid"></td></tr>
+	<tr><td>従業員ID：</td><td><input type="text" name="userid" ></td></tr>
 	<tr><td>日付：</td><td><input type="date" name="today"></td></tr>
 	<tr><td></td><td><input type="submit"value="検索"></td></tr>
 </table>
 </form>
 <span th:text="${NullError}"></span>
+
 	<table class="DateTable">
 		<thead class="DateTable-thead">
 			<th class="DateTable-Column">従業員ID</th>
@@ -36,10 +37,19 @@
 				<td th:text="${data.today}" class="DateTable-Data"></td>
 				<td th:text="${data.startTime}" class="DateTable-Data"></td>
 				<td th:text="${data.endTime}" class="DateTable-Data"></td>
-				<td><button th:onclick="'location.href=\'/Admin/DeleteDate/' + ${data.id} + '\''">削除</button></td>
+				<td>
+					<form th:action="@{/Admin/DeleteDate/search}" method="post">
+                        <input type="hidden"  name="d_delete" th:value="${data.id}">
+                        <input type="hidden"  name="userid" th:value="${userid}">
+                        <input type="hidden"  name="today" th:value="${today}">
+						<input type="submit"  value="削除">
+					</form>
+				</td>
 			</tr>
-		</tbody>
-	</table>
+	</tbody>
+</table>
+
+
 	<a href="/Admin">管理画面へ戻る</a>
 </body>
 </html>

@@ -15,7 +15,7 @@ public class DateValidation {
 			message =  "時間エラー";
 			break;
 		case 2:
-			message = "日付が重複";
+			message = "上書きされました";
 			break;
 		default:
 			message = "不明なエラー";

@@ -1,7 +1,19 @@
 package com.example.demo.doamin.model;
 
-import java.sql.Date;
 import java.sql.Time;
+
+
+import java.sql.Date ;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,36 +22,41 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonPropertyOrder({"id","workersId","today","startTime","endTime"})
-@Setter
+
+@JsonPropertyOrder({"日付","曜日","始時","始分","終時","終分"})
+
 @Getter
+@Setter
 public class OutDate {
-	@JsonProperty("id")
-	private Integer id;
 
-	@JsonProperty("workersId")
-	private String workersId;
+//	@JsonProperty("ユーザーID")
+//	@NotNull(message = "NULLは不可")
+//	private String workersId;
 
-	@JsonProperty("today")
+	@JsonProperty("日付")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Tokyo")
-	private Date today;
+	private int today;
 
-	@JsonProperty("startTime")
-	@JsonFormat(pattern = "HH:mm:ss")
-	private Time startTime;
+	@JsonProperty("曜日")
+	private String Dayofweek;
 
-	@JsonProperty("endTime")
-	@JsonFormat(pattern = "HH:mm:ss")
-	private Time endTime;
+	@JsonProperty("始時")
+	@JsonFormat(pattern = "HH")
+	private String starthour;
 
-	public OutDate() {}
+	@JsonProperty("始分")
+	@JsonFormat(pattern = "HH")
+	private String startTime;
 
-	public OutDate(Integer id,String workersId,Date today,Time startTime,Time endTime) {
-		this.id = id;
-		this.workersId = workersId;
-		this.today = today;
-		this.startTime = startTime;
-		this.endTime = endTime;
-	}
+	@JsonProperty("終時")
+	@JsonFormat(pattern = "mm")
+	private String endhour;
 
+	@JsonProperty("終分")
+	@JsonFormat(pattern = "mm")
+	private String endTime;
+
+//	@ManyToOne
+//	@JoinColumn(name="workersId",insertable = false,updatable = false)
+//	private User user;
 }

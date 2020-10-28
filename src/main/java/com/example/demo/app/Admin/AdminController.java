@@ -56,7 +56,8 @@ public class AdminController {
 	//勤務レコードを削除
 	@GetMapping({"/DeleteDate/{id}","/DeleteDate"})
 	@Transactional
-	public ModelAndView deleteDate(@PathVariable(name="id",required = false) Integer id,ModelAndView mav) {
+	public ModelAndView deleteDate(@PathVariable(name="id",required = false) Integer id,
+			ModelAndView mav) {
 		if(id != null) {
 			if(dateservice.findOne(id).isPresent()) {
 				dateservice.DeleteOne(id);
@@ -72,16 +73,30 @@ public class AdminController {
 	}
 	//変更
 	//検索マッピング********************************************************************/
-	@PostMapping("**/search")
+	@PostMapping({"/DeleteDate/search","/DeleteDate/search/{id}"})
 	public ModelAndView searchDate(
-			@RequestParam(name = "userid")String userid,
-			@RequestParam(name = "today")String today,
+			@RequestParam(name = "userid",required = false)String userid,
+			@RequestParam(name = "today",required = false)String today,
+			@RequestParam(name = "d_delete",required = false)Integer id,
 			ModelAndView mav) {
+		if(id != null) {
+			if(dateservice.findOne(id).isPresent()) {
+				dateservice.DeleteOne(id);
+			}
+			else {
+				mav.addObject("NullError", "データが存在しません");
+			}
+		}
+
 		List<DateEntity> udata = dateservice.VfindUIDandTDY(userid, today);
 		mav.addObject("date_data",udata);
+		mav.addObject("userid",userid);
+		mav.addObject("today",today);
 		mav.setViewName("Admin/AdminDateDelete");
 		return mav;
 	}
+
+
 /**Userマッピング********************************************************************/
 	@GetMapping("/ConfUser")
 	public ModelAndView getUserConf(ModelAndView mav) {

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.query.criteria.internal.expression.function.SubstringFunction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -33,7 +34,6 @@ import org.thymeleaf.expression.Lists;
 
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
-import com.example.demo.doamin.model.OutDateSub;
 import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.user.UserService;
@@ -91,13 +91,12 @@ public class EntryController {
 		mapper.configure(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS, true);
 		//ヘッダをつける
 		CsvSchema schema = mapper.schemaFor(OutDate.class).withHeader();
+		List<OutDate> datecsv = dateservice.DateEntityToOutDate(
+				today,workersUserDetails.getUsername());
 
-//		List<DateEntity> datecsv = dateservice.findByWorkersId(workersUserDetails.getUsername());
-		List<DateEntity> datecsv = dateservice.findQueryMonth(
-				String.valueOf(today.getMonthValue()),
-				Integer.valueOf(workersUserDetails.getUsername()));
 		String a = mapper.writer(schema).writeValueAsString(datecsv);
 		return  a;
+
 	}
 
 	/*Formの初期化と宣言*/
@@ -125,7 +124,7 @@ public class EntryController {
 		mav.addObject("today",today);
 		mav.setViewName("index");
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
-				String.valueOf(today.getMonthValue()),
+				today,
 				Integer.valueOf(workersUserDetails.getUsername()),
 				pageable);
 
@@ -153,7 +152,7 @@ public class EntryController {
 			mav.addObject("errormsg", errormessage);
 		}
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
-				String.valueOf(entryForm.getLDtoday().getMonthValue()),
+				entryForm.getLDtoday(),
 				Integer.valueOf(workersUserDetails.getUsername()),
 				pageable);
 
@@ -169,7 +168,7 @@ public class EntryController {
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@RequestParam("D_today")LocalDate today) throws IOException{
 		if(filename == "") {
-			filename = "ユーザー"+workersUserDetails.getUsername()+"の勤務表";
+			filename= today.getMonthValue()+"月のユーザー"+workersUserDetails.getUsername()+"の勤務表";
 		}
 		HttpHeaders headers = new HttpHeaders();
 		downloadHelper.addContentDisposition(headers, filename+".csv");

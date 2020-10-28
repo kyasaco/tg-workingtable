@@ -71,7 +71,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			/*Spring SecurityではセッションIDの再発行、CSRF対策はデフォルト*/
 			.sessionManagement()
 				.maximumSessions(1)
-				.expiredUrl("/loginForm?error=true")
+				.expiredUrl("/ErrorPage")
 //				.sessionRegistry(sessionRegistry())
 				.and()
 			.invalidSessionUrl("/ErrorPage");

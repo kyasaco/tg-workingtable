@@ -22,9 +22,9 @@ public class EntryForm {
 	@NotNull(message = "NULLは不可")
 	private String workersId;
 	@NotBlank(message = "空白は不可")
-	private String startTime ="08:00";
+	private String startTime ;
 	@NotEmpty(message = "空白は不可")
-	private  String endTime = "17:00";
+	private  String endTime ;
 	@NotNull(message = "NULLは不可")
 	private String today;
 
