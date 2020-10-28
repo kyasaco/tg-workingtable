@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.expression.Lists;
 
-import com.example.demo.app.login.LoginForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.model.OutDateSub;
@@ -111,13 +110,14 @@ public class EntryController {
 	/*初期表示。パラメータの日付を受け取る*/
 	@GetMapping({"/","/{today}","/calendar/{today}"})
 	public ModelAndView EntryView(
+	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
 	@PathVariable(name="today",required = false)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate today,
 	ModelAndView  mav,
-	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
+
 	@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable)
 	{
-		if(today==null){
+		if(today==null ){
 			today=LocalDate.now();
 		}
 

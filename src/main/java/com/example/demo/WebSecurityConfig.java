@@ -1,15 +1,19 @@
 package com.example.demo;
 
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import com.example.demo.doamin.MySessionInformation;
 import com.example.demo.doamin.service.user.WorkersUserDetailsService;
 
 import lombok.AllArgsConstructor;
@@ -21,11 +25,12 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	//ユーザー検索処理を書いたUserDetailsServiceインターフェースを実装したクラスを宣言
 	private final WorkersUserDetailsService userDetailsService;
 
-	//HttpSession生成・破棄イベントのハンドラ(処理要求が発生したときに起動されるプログラムのこと)
-	@Bean
-	public HttpSessionEventPublisher  httpSessionEventPublisher() {
-		return new HttpSessionEventPublisher();
-	}
+//	@Bean
+//	public SessionRegistry sessionRegistry() {
+//	    SessionRegistry sessionRegistry = new SessionRegistryImpl();
+//	    return sessionRegistry;
+//	}
+
 
 	/*パスワードエンコード用*/
 	@Bean
@@ -43,47 +48,33 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception{
 		//authorizeRequests:何のリクエストを許可するか
 		http.authorizeRequests()
-			/*
-			antMatcher[s]:指定したantパターンと一致する場合にのみ呼び出されるようにする
-			mvcMatacher[s]:指定したSpringMVCパターンと一致する場合にのみ呼び出されるようにする
-			permitAll()を付けるとすべてのユーザーがアクセス可能になる
-			hasRole("ロール名")を付けると設定されたロールのみアクセス可能
-			*/
-			.antMatchers("/js/**","/css/**","/insertForm","/insert").permitAll()
-			//	anyRequest().authenticated()：全てのURLリクエストは認証されているユーザしかアクセスできない
-			.and()
-			//{/Admin/**}パスはADMINのロールが必要
-			.authorizeRequests().mvcMatchers("/Admin/**").hasRole("ADMIN")
-			.anyRequest().authenticated()
-			.and()
+				.mvcMatchers("/js/**","/css/**","/insertForm","/insert","/ErrorPage").permitAll()
+				.mvcMatchers("/Admin/**").access("hasRole('ADMIN') and isFullyAuthenticated()")
+				.anyRequest().authenticated()
+				.and()
 			.formLogin()
-			//loginPage(URL)：ログイン画面のURL
-			.loginPage("/loginForm")
-			//loginProcessingUrl(URL)：ログインを処理するURL
-			.loginProcessingUrl("/login")
-			/*
-			 * usernameParameter/passwordParameter：ログイン画面のhtmlのinputのname属性を見に行っている
-			 */
-			.usernameParameter("username")
-			.passwordParameter("password")
-			//defaultSuccessUrl("URL",T or F)：第一引数＝ログインに成功したときのURL
-			//第二引数＝true：ログイン画面後必ずtopへ飛ばされる
-			//	false：(認証されてなくて一度ログイン画面に飛ばされていも)ログインしたら指定したURLに飛んでくれる
-			.defaultSuccessUrl("/",true)
-			//failureUrl(URL)：ログインに失敗したときのURL。?errorとつけるとThymeleafでの処理が楽
-			.failureUrl("/loginForm?error=true").permitAll()
-			.and()
-			.exceptionHandling().accessDeniedPage("/ErrorPage")
-			.and()
-			//ログイン情報をクッキーに保存するかどうか
-			//rememberMeCookieName:クッキー名
-			//tokenValiditySeconds:デフォルトは14日。秒にて指定する
-			//ログアウトすると破棄される
-			.rememberMe().rememberMeCookieName("remembered_working_user")
-									.tokenValiditySeconds(604800)
-			.and()
+				.loginPage("/loginForm")
+				.loginProcessingUrl("/login")
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.defaultSuccessUrl("/",true)
+				.failureUrl("/loginForm?error=true").permitAll()
+				.and()
+			.logout()
+				.deleteCookies("JSESSIONID")
+				.and()
+			.rememberMe()
+				.key("REMEMBER")
+				.rememberMeCookieName("remembered_working_user")
+				.tokenValiditySeconds(604800)
+				.and()
 			/*Spring SecurityではセッションIDの再発行、CSRF対策はデフォルト*/
-			.sessionManagement().maximumSessions(1).expiredUrl("/loginForm").expiredSessionStrategy(new MySessionInformation());
+			.sessionManagement()
+				.maximumSessions(1)
+				.expiredUrl("/loginForm?error=true")
+//				.sessionRegistry(sessionRegistry())
+				.and()
+			.invalidSessionUrl("/ErrorPage");
 
 	}
 

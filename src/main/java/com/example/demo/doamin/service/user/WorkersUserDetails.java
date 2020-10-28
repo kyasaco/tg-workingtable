@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.demo.doamin.model.User;
 
+
 /*
  * UserDetailsを実装したクラス：コアユーザー(サービスを利用するユーザーの中でも特にメイン(固定)で利用するユーザー)情報を設定
  * 各メソッドの詳細は非nullでなくてはいけない
@@ -15,18 +16,18 @@ import com.example.demo.doamin.model.User;
  * ここではセキュリティに関連する情報のみ宣言する(電話番号、住所などは書かない)
  * */
 
-public class WorkersUserDetails implements UserDetails {
+public class WorkersUserDetails  implements UserDetails{
 	//認証に使うユーザー情報のフィールド
 	private final User user;
-	
+
 	public WorkersUserDetails(User user)
 	{
 		this.user = user;
-	}	
+	}
 	public User getUser() {
 		return user;
 	}
-	
+
 	/*
 	 *Collection<? extends GrantedAuthority>：ユーザーに付与された権限を返す
 	 *GrantedAuthorityインターフェースはAuthentication(認証)オブジェクトに付与された権限を表す
@@ -44,7 +45,7 @@ public class WorkersUserDetails implements UserDetails {
 	public String getPassword() {
 		return this.user.getPassword();
 	}
-	
+
 	//ユーザー認証に使用されるユーザー名を返す
 	@Override
 	public String getUsername() {
@@ -74,5 +75,20 @@ public class WorkersUserDetails implements UserDetails {
 		// アカウントの無効化defoult:false;
 		return true;
 	}
+
+	public boolean equals(Object rhs) {
+		if (rhs instanceof WorkersUserDetails) {
+			return this.user.getUserid().equals(((WorkersUserDetails) rhs).user.getUserid());
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the hashcode of the {@code username}.
+	 */
+	public int hashCode() {
+		return this.user.getUserid().hashCode();
+	}
+
 
 }

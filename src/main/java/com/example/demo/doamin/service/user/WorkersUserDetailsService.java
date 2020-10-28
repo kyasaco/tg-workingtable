@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 public class WorkersUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userrepository;
-	
+
 	/*
 	 * UserDetailsServiceインターフェースのメソッド
 	 * loadUserByUsernaeme(string)をオーバーライドしてユーザーの検索処理を実装する
