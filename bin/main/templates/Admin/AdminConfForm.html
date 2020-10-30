@@ -5,9 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ログイン</title>
 	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
-	<!-- import js.file CDN↓ -->
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
-	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
 	<!-- import ResetCss & CDN & Local　↓ -->
 	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
@@ -15,12 +12,17 @@
 </head>
 <body th:with="user=${#authentication.principal.user}">
 <div sec:authorize="${hasRole('ADMIN')}">
-	<form th:action="@{/Admin}" method="post" style="text-align: canter">
-	<input type="submit" name="date" value="勤務表管理画面へ">
-	<input type="submit" name="user" value="利用者管理画面へ">
-	</form>
+
+	<button th:onclick="'location.href=\''+@{/Admin/DeleteDate(today=${today})} + '\''" name="date" value="">勤務表管理画面へ</button>
+    <button th:onclick="'location.href=\''+@{/Admin/ConfUser(today=${today})} + '\''" name="user" value="">利用者管理画面へ</button>
+    <button th:onclick="'location.href=\''+@{/Admin/Plans(today=${today})} + '\''" name="plans" value="">予定入力画面へ</button>
+
 </div>
 <a href="/">勤務表入力画面に戻る</a>
+<!-- import js.file CDN↓ -->
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
+<script th:src="@{/js/demo.js}"></script>
 
 </body>
 </html>

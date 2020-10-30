@@ -66,7 +66,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			.rememberMe()
 				.key("REMEMBER")
 				.rememberMeCookieName("remembered_working_user")
-				.tokenValiditySeconds(604800)
+				.tokenValiditySeconds(604800)//7days
 				.and()
 			/*Spring SecurityではセッションIDの再発行、CSRF対策はデフォルト*/
 			.sessionManagement()

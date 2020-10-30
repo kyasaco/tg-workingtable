@@ -73,7 +73,7 @@
    cursor: default;
 }
 .cld-number:hover{
-	background:linear-gradient(0deg,	#aad5d5,#e2f1f1);	
+	background:linear-gradient(0deg,	#aad5d5,#e2f1f1);
 }
 .cld-title{
    position: absolute;
@@ -111,4 +111,8 @@
 }
 .today .cld-number.eventday:hover{
    background: #005EFF;
+}
+
+.cld-day.today .cld-number .cld-title{
+	color:#0080FF;
 }

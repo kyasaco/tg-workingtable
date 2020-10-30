@@ -235,47 +235,35 @@ function createCalendar(calendar, element, adjuster){
       }
       var number = DayNumber(i+1);
       // Check Date against Event Dates
-      for(var n = 0; n < calendar.Model.length; n++){
-        var evDate = calendar.Model[n].Date;
-        var toDate = new Date(calendar.Selected.Year, calendar.Selected.Month, (i+1));
-        if(evDate.getTime() == toDate.getTime()){
-          number.className += " eventday";
-          var title = document.createElement('span');
-          title.className += "cld-title";
-          if(typeof calendar.Model[n].Link == 'function' || calendar.Options.EventClick){
-            var a = document.createElement('a');
-            a.setAttribute('href', '#');
-            a.innerHTML += calendar.Model[n].Title;
-            if(calendar.Options.EventClick){
-              var z = calendar.Model[n].Link;
-              if(typeof calendar.Model[n].Link != 'string'){
-                  a.addEventListener('click', calendar.Options.EventClick.bind.apply(calendar.Options.EventClick, [null].concat(z)) );
-                  if(calendar.Options.EventTargetWholeDay){
-                    day.className += " clickable";
-                    day.addEventListener('click', calendar.Options.EventClick.bind.apply(calendar.Options.EventClick, [null].concat(z)) );
-                  }
-              }else{
-                a.addEventListener('click', calendar.Options.EventClick.bind(null, z) );
-                if(calendar.Options.EventTargetWholeDay){
-                  day.className += " clickable";
-                  day.addEventListener('click', calendar.Options.EventClick.bind(null, z) );
+	//国民の祝日設定と予定処理
+			for(var n = 0; n < list.length ; n++){
+				var evDate =new Date(list[n].today);
+				var toDate = new Date(calendar.Selected.Year, calendar.Selected.Month, (i+1));
+				var holiday = JapaneseHolidays.isHoliday(toDate);
+
+				if((evDate.getMonth()) == toDate.getMonth() && (evDate.getDate()) == toDate.getDate() && evDate.getFullYear() == toDate.getFullYear()){
+
+					number.className += " eventday";
+					var title = document.createElement('span');
+					title.className += "cld-title";
+                    if(list[n].holiday ==true || holiday == true){
+						day.className += "cld-day currMonth sun";
+                    }
+                    title.innerHTML += '<h3>['+list[n].title+']</h3>';
+					title.innerHTML += '<p>'+ list[n].plans+ '</p>';
+					number.appendChild(title);
+                 }else{
+	                  if(holiday){
+                        number.className += " eventday";
+                        var title = document.createElement('span');
+                        title.className += "cld-title";
+                        day.className += "cld-day currMonth sun";
+                        title.innerHTML += '<p>'+holiday+ '</p>';
+                        number.appendChild(title);
+                    }
                 }
-              }
-            }else{
-              a.addEventListener('click', calendar.Model[n].Link);
-              if(calendar.Options.EventTargetWholeDay){
-                day.className += " clickable";
-                day.addEventListener('click', calendar.Model[n].Link);
-              }
-            }
-            title.appendChild(a);
-          }else{
-            title.innerHTML += '<a href="' + calendar.Model[n].Link + '">' + calendar.Model[n].Title + '</a>';
-          }
-          number.appendChild(title);
-        }
-      }
-      day.appendChild(number);
+			}
+     day.appendChild(number);
       // If Today..
       if((i+1) == calendar.Today.getDate() && calendar.Selected.Month == calendar.Today.Month && calendar.Selected.Year == calendar.Today.Year){
         day.className += " today";
@@ -338,38 +326,33 @@ function createCalendar(calendar, element, adjuster){
 //自作：クリックした年月日をアラート表示 ver1.0.0
 //選択月以外をクリックした場合は年月日がでないように更新 ver2.0
 	$('.cld-number').click(function(){
-
 		var parent2 =$(this).parent().attr('class');
+        var Year = calendar.Selected.Year;
 		if(parent2 == 'cld-day currMonth' || parent2 == 'cld-day currMonth today')
 		{
-			var Year = calendar.Selected.Year;
 			var Month = ('00'+(calendar.Selected.Month + 1)).slice(-2);
 			var Day = ('00'+(parseInt(this.textContent))).slice(-2);
 			var today = Year+'-'+Month+'-'+Day;
+          	  location.href = './' + today;
 
-			location.href = './' + today;
 		}else if(parent2 == 'cld-day prevMonth'){
-            var Year = calendar.Selected.Year;
-            var Month = ('00'+(calendar.Selected.Month)).slice(-2);
-            if(Month < 1){
-                Year -= 1;
-                Month = '12';
-            }
-            var Day = ('00'+(parseInt(this.textContent))).slice(-2);
-            var today = Year+'-'+Month+'-'+Day;
-
-            location.href = './' + today;
-		  }else if(parent2 == 'cld-day nextMonth'){
-            var Year = calendar.Selected.Year;
-            var Month = ('00'+(calendar.Selected.Month + 2)).slice(-2);
-            if(Month > 12){
-                Year += 1;
-                Month = '01';
-            }
-
-            var Day = ('00'+(parseInt(this.textContent))).slice(-2);
-            var today = Year+'-'+Month+'-'+Day;
-            location.href = './' + today;
+			var Month = ('00'+(calendar.Selected.Month)).slice(-2);
+			if(Month < 1){
+				Year -= 1;
+				Month = '12';
+			}
+			var Day = ('00'+(parseInt(this.textContent))).slice(-2);
+			var today = Year+'-'+Month+'-'+Day;
+			location.href = './' + today;
+		}else if(parent2 == 'cld-day nextMonth'){
+			var Month = ('00'+(calendar.Selected.Month + 2)).slice(-2);
+			if(Month > 12){
+				Year += 1;
+				Month = '01';
+			}
+			var Day = ('00'+(parseInt(this.textContent))).slice(-2);
+			var today = Year+'-'+Month+'-'+Day;
+			location.href = './' + today;
 		}else{
 			alert("休日です");
 		}

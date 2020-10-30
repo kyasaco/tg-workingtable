@@ -16,7 +16,8 @@
 		<nav class="nav-baner">
 			<div id="Admin_nav">
 				<span th:text = "|ようこそ${Luser.lastname}さん|">〇〇さんようこそ</span>
-				<span class="nav-welcome"  sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span><button onclick="location.href='/Admin'" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
+				<span class="nav-welcome"  sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span>
+				<button th:onclick="'location.href=\''+@{/Admin/(today=${today})} + '\''" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
 			</div>
 			<h1>＜勤務表＞</h1>
 			<input type="hidden" form="form1" th:value="${Luser.userid}" name="workersId">

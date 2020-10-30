@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,13 +58,11 @@ import net.bytebuddy.asm.Advice.OffsetMapping.Sort;
 public class EntryController {
 
 	/*DIするサービスクラスを宣言*/
-
 	private final DateService dateservice;
 	private final DateValidation dateValidation;
 	private final DownloadHelper downloadHelper;
 
 	/*定数*/
-
 	/*開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)*/
 	final Map<String,String> SELECT_TIME = Collections.unmodifiableMap(new LinkedHashMap<String, String>(){
 		{
@@ -91,11 +90,8 @@ public class EntryController {
 		mapper.configure(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS, true);
 		//ヘッダをつける
 		CsvSchema schema = mapper.schemaFor(OutDate.class).withHeader();
-		List<OutDate> datecsv = dateservice.DateEntityToOutDate(
-				today,workersUserDetails.getUsername());
-
-		String a = mapper.writer(schema).writeValueAsString(datecsv);
-		return  a;
+		List<OutDate> datecsv = dateservice.DateEntityToOutDate(today,workersUserDetails.getUsername());
+		return  mapper.writer(schema).writeValueAsString(datecsv);
 
 	}
 
@@ -112,21 +108,19 @@ public class EntryController {
 	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
 	@PathVariable(name="today",required = false)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate today,
-	ModelAndView  mav,
-
-	@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable)
+	@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable,
+	ModelAndView  mav)
 	{
 		if(today==null ){
 			today=LocalDate.now();
 		}
-
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today",today);
 		mav.setViewName("index");
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
-				today,
-				Integer.valueOf(workersUserDetails.getUsername()),
-				pageable);
+			today,
+			workersUserDetails.getUsername(),
+			pageable);
 
 		mav.addObject("DateTableData", datedata.getContent());
 		mav.addObject("Luser", workersUserDetails.getUser());
@@ -136,6 +130,7 @@ public class EntryController {
 
 	/*勤務表レコード登録。エラーでなければ登録*/
 	@PostMapping
+	@Transactional
 	public ModelAndView Entry(
 			@Validated EntryForm entryForm,
 			BindingResult result,
@@ -152,9 +147,9 @@ public class EntryController {
 			mav.addObject("errormsg", errormessage);
 		}
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
-				entryForm.getLDtoday(),
-				Integer.valueOf(workersUserDetails.getUsername()),
-				pageable);
+			entryForm.getLDtoday(),
+			workersUserDetails.getUsername(),
+			pageable);
 
 		mav.addObject("DateTableData", datedata.getContent());
 		return mav;
@@ -162,6 +157,7 @@ public class EntryController {
 
 	/*勤務表csvダウンロードのマッピングを行う*/
 	@PostMapping("/download")
+	@Transactional
 	public ResponseEntity<byte[]> download(
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
 			@RequestParam("filename")String filename,

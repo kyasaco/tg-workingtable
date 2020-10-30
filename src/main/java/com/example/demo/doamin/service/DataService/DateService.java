@@ -31,7 +31,7 @@ public class DateService {
 	 * useridと一致する一件の取得
 	 *
 	 * @param id
-	 * @return
+	 * @return useridと一致する一件のDateEntity
 	 */
 	public Optional<DateEntity> findOne(Integer id) {
 		return repository.findById(id);
@@ -79,8 +79,9 @@ public class DateService {
 	 */
 	public Page<DateEntity> findQueryMonthForPage(
 			LocalDate today,
-			Integer id,
+			String bid,
 			Pageable pageable){
+		Integer id = Integer.valueOf(bid);
 		String month = String.valueOf(today.getMonthValue());
 		String year = String.valueOf(today.getYear());
 		if(today.getMonthValue() < 10) {

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー</title>
+    <!-- import ResetCss & CDN & Local　↓ -->
+    <link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/theme.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <header>
+
+    </header>
+    <main>
+        <div id="caleandar"></div>
+        <a th:href="@{/Admin(today=${today})}">管理画面に戻る</a>
+    </main>
+    <input type="hidden" id="abcd" th:value="${abcd}">
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<!-- import js.file CDN↓ -->
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
+<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
+<!-- import js.file Local↓ -->
+<script th:src="@{https://cdn.rawgit.com/osamutake/japanese-holidays-js/v1.0.9/lib/japanese-holidays.min.js}"></script>
+<script th:inline="javascript">
+    var list = /*[[${plans_data}]]*/ [];
+</script>
+<script type="text/javascript" th:src="@{/js/admin_calender.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.js}"></script>
+</body>
+</html>
