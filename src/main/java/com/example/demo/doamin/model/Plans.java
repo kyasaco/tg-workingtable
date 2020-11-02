@@ -35,4 +35,6 @@ public class Plans {
 		this.plans = "";
 		this.holiday = false;
 	}
+
+
 }

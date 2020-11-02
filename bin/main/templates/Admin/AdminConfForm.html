@@ -11,11 +11,11 @@
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body th:with="user=${#authentication.principal.user}">
-<div sec:authorize="${hasRole('ADMIN')}">
+<div sec:authorize="${hasRole('ADMIN')}" th:with="thtoday = ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
 
-	<button th:onclick="'location.href=\''+@{/Admin/DeleteDate(today=${today})} + '\''" name="date" value="">勤務表管理画面へ</button>
-    <button th:onclick="'location.href=\''+@{/Admin/ConfUser(today=${today})} + '\''" name="user" value="">利用者管理画面へ</button>
-    <button th:onclick="'location.href=\''+@{/Admin/Plans(today=${today})} + '\''" name="plans" value="">予定入力画面へ</button>
+	<button th:onclick="'location.href=\''+@{/Admin/DeleteDate} + '\''" name="date" value="">勤務表管理画面へ</button>
+    <button th:onclick="'location.href=\''+@{/Admin/ConfUser(today=${thtoday})} + '\''" name="user" value="">利用者管理画面へ</button>
+    <button th:onclick="'location.href=\''+@{/Admin/Plans(today=${thtoday} )} + '\''" name="plans" value="">予定入力画面へ</button>
 
 </div>
 <a href="/">勤務表入力画面に戻る</a>

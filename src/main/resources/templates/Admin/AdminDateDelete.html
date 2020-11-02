@@ -34,9 +34,9 @@
 		<tbody class="DateTable-tbody">
 			<tr th:each="data:${date_data}">
 				<td th:text="${data.workersId}" class="DateTable-Data"></td>
-				<td th:text="${data.today}" class="DateTable-Data"></td>
-				<td th:text="${data.startTime}" class="DateTable-Data"></td>
-				<td th:text="${data.endTime}" class="DateTable-Data"></td>
+				<td th:text="${#dates.format(data.today,'yyyy年MM月dd日')}" class="DateTable-Data"></td>
+				<td th:text="${#dates.format(data.startTime,'HH時mm分')}" class="DateTable-Data"></td>
+				<td th:text="${#dates.format(data.endTime,'HH時mm分')}" class="DateTable-Data"></td>
 				<td>
 					<form th:action="@{/Admin/DeleteDate/search}" method="post">
                         <input type="hidden"  name="d_delete" th:value="${data.id}">

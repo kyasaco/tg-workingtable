@@ -34,13 +34,24 @@
 			<ul class="todays_plan_ul" >
 				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_today">今日の予定</h3></li>
 				<li class="plans_list plans_list_title" th:text="${plan_data[0].title}"></li>
-				<li class="plans_list plans_list_plans"  th:text="${plan_data[0].plans}"></li>
+				<li class="plans_list plans_list_plans" th:if="${plan_data[0].plans}">
+					<th:block th:each="str, stat : ${plan_data[0].plans.split('\r\n|\r|\n', -1)}">
+				        <th:block th:text="${str}"/>
+				        <br th:if="${!stat.last}"/>
+				    </th:block>
+				</li>
+
 				<li class="plans_list plans_list_holiday"  th:if="${plan_data[0].holiday}" th:text="休日です"></li>
 			</ul>
 			<ul class="somedays_plan_ul">
-				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_nextday">次([[${plan_data[1].today}]])の予定</h3></li>
+				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_nextday">次([[${#temporals.format(today,'yyyy年MM月dd日')}]])の予定</h3></li>
 				<li class="plans_list  plans_list_title"th:text="${plan_data[1].title}"></li>
-				<li class="plans_list plans_list_plans" th:text="${plan_data[1].plans}"></li>
+				<li class="plans_list plans_list_plans" th:if="${plan_data[1].plans}">
+					<th:block th:each="str, stat : ${plan_data[1].plans.split('\r\n|\r|\n', -1)}">
+				        <th:block th:text="${str}"/>
+				        <br th:if="${!stat.last}"/>
+				    </th:block>
+				</li>
 				<li class="plans_list plans_list_holiday" th:if="${plan_data[1].holiday}" th:text="休日です"></li>
 			</ul>
 		</div>
@@ -48,7 +59,7 @@
 			<div class="main-text-custom">
 				<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
 					<!-- 実行時の日付 -->
-					<strong>日付：</strong><label th:text="${today}"> </label>
+					<strong>日付：</strong><label th:text="${#temporals.format(today,'yyyy年MM月dd日')}"> </label>
 					<input type="hidden" form="form1" th:value="${today}" name="today">
 					<a th:href="@{/calendar(todayCarendar=${today})}">カレンダー</a>
 					<div class="day-arrow">
@@ -118,9 +129,9 @@
 			</thead>
 			<tbody class="DateTable-tbody">
 				<tr th:each="data:${DateTableData}">
-					<td th:text="${data.today}" class="DateTable-Data"></td>
-					<td th:text="${data.startTime}" class="DateTable-Data"></td>
-					<td th:text="${data.endTime}" class="DateTable-Data"></td>
+					<td th:text="${#dates.format(data.today,'yyyy年MM月dd日')}" class="DateTable-Data"></td>
+					<td th:text="${#dates.format(data.startTime,'HH時mm分')}" class="DateTable-Data"></td>
+					<td th:text="${#dates.format(data.endTime,'HH時mm分')}" class="DateTable-Data"></td>
 				</tr>
 			</tbody>
 

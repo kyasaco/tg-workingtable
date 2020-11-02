@@ -248,7 +248,7 @@ function createCalendar(calendar, element, adjuster){
 						day.className += "cld-day currMonth sun";
                     }
                     title.innerHTML += '<h3>['+list[n].title+']</h3>';
-					title.innerHTML += '<p>'+ list[n].plans+ '</p>';
+					title.innerHTML += '<p style="text-align:left;">'+ list[n].plans.replace(/\r?\n/g, '<br>')+ '</p>';
 					number.appendChild(title);
                  }else{
 	                  if(holiday){

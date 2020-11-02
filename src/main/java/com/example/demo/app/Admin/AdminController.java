@@ -3,9 +3,12 @@ package com.example.demo.app.Admin;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -27,10 +30,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.Plans;
+import com.example.demo.doamin.model.RoleName;
 import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.plans.PlansService;
 import com.example.demo.doamin.service.user.UserService;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import lombok.AllArgsConstructor;
 
@@ -40,7 +45,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/Admin")
 public class AdminController {
 	private final DateService dateservice;
-	private final UserService userservice;
+	private final UserService userservice ;
 	private final PlansService plansrservice;
 
 	@GetMapping
@@ -48,22 +53,19 @@ public class AdminController {
 			HttpServletResponse httpServletResponse,
 			@RequestParam("today")String today,
 			ModelAndView mav) {
+
 		mav.setViewName("Admin/AdminConfForm");
 		mav.addObject("today", today);
 		return mav;
 	}
-
 /**Dateマッピング********************************************************************/
 
 	//勤務レコードを削除
 	@GetMapping({"/DeleteDate/{id}","/DeleteDate"})
 	@Transactional
 	public ModelAndView deleteDate(
-		@RequestParam("today")
-		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
 		@PathVariable(name="id",required = false) Integer id,
 		ModelAndView mav) {
-		mav.addObject("today", today);
 		if(id != null) {
 			if(dateservice.findOne(id).isPresent()) {
 				dateservice.DeleteOne(id);
@@ -112,6 +114,8 @@ public class AdminController {
 		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
 		ModelAndView mav) {
 		List<User> data = userservice.findAllAsc();
+		List<RoleName> SELECT_ROLE = userservice.findDistinByRolenames();
+		mav.addObject("SELECT_ROLE", SELECT_ROLE);
 		mav.addObject("user_data", data);
 		mav.setViewName("Admin/AdminUserConfgure");
 		mav.addObject("today", today);
@@ -139,6 +143,9 @@ public class AdminController {
 			@RequestParam("today")
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
 			ModelAndView mav) {
+		Optional<Plans> plan = plansrservice.getOnePlan(today.toString());
+
+		mav.addObject("plans_form",plan.get());
 		mav.addObject("today", today);
 		mav.setViewName("Admin/AdminInsertPlans");
 		return mav;

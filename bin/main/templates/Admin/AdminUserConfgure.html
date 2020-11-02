@@ -14,6 +14,7 @@
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
+<form th:action="@{/Admin/ConfUser}" method="post">
 	<table class="DateTable">
 		<thead class="DateTable-thead">
 			<th class="DateTable-Column">従業員ID</th>
@@ -24,17 +25,29 @@
 		</thead>
 		<tbody class="DateTable-tbody">
 			<tr th:each="data:${user_data}">
-				<td th:text="${data.userid}" class="DateTable-Data"></td>
-				<td th:text="${data.lastname}" class="DateTable-Data"></td>
-				<td th:text="${data.firstname}" class="DateTable-Data"></td>
-				<td th:text="${data.rolename}" class="DateTable-Data"></td>
+				<td  class="DateTable-Data">
+					<input type="text" name="userid" th:value="${data.userid}" id="input-text-user">
+				</td>
+				<td  class="DateTable-Data">
+					<input type="text" name="lastname" th:value="${data.lastname}" id="input-text-user">
+				</td>
+				<td  class="DateTable-Data">
+					<input type="text" name="firstname" th:value="${data.firstname}" id="input-text-user">
+				</td>
+				<td class="DateTable-Data">
+					<select name="${data.userid}">
+						<option th:each="oioi:${SELECT_ROLE}" th:value="${oioi}" th:text="${oioi}" th:selected="${oioi == data.rolename}"></option>
+					</select>
+				</td>
 				<td>
-				<button th:onclick="'location.href=\''+@{/Admin/ConfUser/Delete/{id}(id=${data.userid})} + '\''">削除</button>
-				<button th:onclick="'location.href=\''+@{/Admin/ConfUser/Edit/{id}(id=${data.userid})} + '\''">更新</button>
+					<input type="checkbox" th:fileld="${data.userid}">
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<input type="submit" value="実行">
+</form>
+
 	<a th:href="@{/Admin(today=${today})}">管理画面へ戻る</a>
 </body>
 </html>

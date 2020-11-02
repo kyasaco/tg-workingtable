@@ -301,7 +301,28 @@ background: #dfefff;
 .plans_list_plans{
 	padding: 2px;
 	background-color:inherit;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 60%;
+    text-align: left;
 }
+.plans_list_plans::-webkit-scrollbar {
+
+  width: 7px;
+
+}
+.plans_list_plans::-webkit-scrollbar-thumb {
+
+  background: #0b41a0;
+
+  border-radius: 3px;
+}
+.plans_list_plans::-webkit-scrollbar-track {
+
+  background: rgba(100,100,100, .5);
+
+}
+
 .plans_list_holiday{
     border-radius: 10px;
     background-color: orange;
@@ -317,4 +338,7 @@ background: #dfefff;
 .logout-form{
     display: inline;
     margin-left: auto;
+}
+input#input-text-user {
+    width: 90%;
 }
