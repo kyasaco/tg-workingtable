@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,8 +36,10 @@ import org.thymeleaf.expression.Lists;
 
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
+import com.example.demo.doamin.model.Plans;
 import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
+import com.example.demo.doamin.service.plans.PlansService;
 import com.example.demo.doamin.service.user.UserService;
 import com.example.demo.doamin.service.user.WorkersUserDetails;
 import com.example.demo.errors.DateValidation;
@@ -60,8 +63,9 @@ public class EntryController {
 	/*DIするサービスクラスを宣言*/
 	private final DateService dateservice;
 	private final DateValidation dateValidation;
+	private final PlansService plansservice;
 	private final DownloadHelper downloadHelper;
-
+	private final LocalDate TODAY_NOW = LocalDate.now();
 	/*定数*/
 	/*開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)*/
 	final Map<String,String> SELECT_TIME = Collections.unmodifiableMap(new LinkedHashMap<String, String>(){
@@ -117,11 +121,14 @@ public class EntryController {
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today",today);
 		mav.setViewName("index");
+		List<Plans> plan = plansservice.getOneSomeDayPlan(TODAY_NOW.toString());
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
 			today,
 			workersUserDetails.getUsername(),
 			pageable);
 
+		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
+		mav.addObject("plan_data", plan);
 		mav.addObject("DateTableData", datedata.getContent());
 		mav.addObject("Luser", workersUserDetails.getUser());
 
@@ -146,10 +153,13 @@ public class EntryController {
 			String errormessage = dateValidation.ErrorSwitching(dateservice.SaveFlush(entryForm));
 			mav.addObject("errormsg", errormessage);
 		}
+		List<Plans> plan = plansservice.getOneSomeDayPlan(TODAY_NOW.toString());
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
 			entryForm.getLDtoday(),
 			workersUserDetails.getUsername(),
 			pageable);
+		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
+		mav.addObject("plan_data", plan);
 
 		mav.addObject("DateTableData", datedata.getContent());
 		return mav;

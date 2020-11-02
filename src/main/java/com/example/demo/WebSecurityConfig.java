@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -71,6 +72,8 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 			/*Spring SecurityではセッションIDの再発行、CSRF対策はデフォルト*/
 			.sessionManagement()
 				.maximumSessions(1)
+				//true
+				.maxSessionsPreventsLogin(false)
 				.expiredUrl("/ErrorPage")
 //				.sessionRegistry(sessionRegistry())
 				.and()

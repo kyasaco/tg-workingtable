@@ -25,8 +25,14 @@ public class Plans {
 	@JsonIgnore
 	private Integer id;
 
-	private String title;
+	private String title ;
 	private Date today;
 	private String plans;
 	private boolean holiday;
+
+	public void setInitData() {
+		this.title = "予定はありません";
+		this.plans = "";
+		this.holiday = false;
+	}
 }

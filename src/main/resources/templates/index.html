@@ -17,9 +17,12 @@
 			<div id="Admin_nav">
 				<span th:text = "|ようこそ${Luser.lastname}さん|">〇〇さんようこそ</span>
 				<span class="nav-welcome"  sec:authorize="${hasRole('ADMIN')}">あなたは管理者です</span>
-				<button th:onclick="'location.href=\''+@{/Admin/(today=${today})} + '\''" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
+				<button th:onclick="'location.href=\''+@{/Admin/(today=${TODAY_NOW})} + '\''" sec:authorize="${hasRole('ADMIN')}">管理画面へ</button>
+				<form th:action="@{/logout}" method="post" class="logout-form">
+					<button>ログアウト</button>
+				</form>
 			</div>
-			<h1>＜勤務表＞</h1>
+			<h1>勤務表</h1>
 			<input type="hidden" form="form1" th:value="${Luser.userid}" name="workersId">
 		</nav>
 	</div>
@@ -27,21 +30,55 @@
 
 <main>
 	<div class="debug2">
-		<div>
+		<div class="todays_plan">
+			<ul class="todays_plan_ul" >
+				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_today">今日の予定</h3></li>
+				<li class="plans_list plans_list_title" th:text="${plan_data[0].title}"></li>
+				<li class="plans_list plans_list_plans"  th:text="${plan_data[0].plans}"></li>
+				<li class="plans_list plans_list_holiday"  th:if="${plan_data[0].holiday}" th:text="休日です"></li>
+			</ul>
+			<ul class="somedays_plan_ul">
+				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_nextday">次([[${plan_data[1].today}]])の予定</h3></li>
+				<li class="plans_list  plans_list_title"th:text="${plan_data[1].title}"></li>
+				<li class="plans_list plans_list_plans" th:text="${plan_data[1].plans}"></li>
+				<li class="plans_list plans_list_holiday" th:if="${plan_data[1].holiday}" th:text="休日です"></li>
+			</ul>
+		</div>
+		<div class="main_datatable">
 			<div class="main-text-custom">
 				<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
 					<!-- 実行時の日付 -->
-					<label th:text="|日付：${today}|"> </label>
+					<strong>日付：</strong><label th:text="${today}"> </label>
 					<input type="hidden" form="form1" th:value="${today}" name="today">
-					<a th:href="@{/calendar/(todayCarendar=${today})}">カレンダー</a>
+					<a th:href="@{/calendar(todayCarendar=${today})}">カレンダー</a>
+					<div class="day-arrow">
+						<ul>
+							<li class="page_left_arrow">
+								<a th:href="@{'/' + ${today.minusDays(1)}}"class="next-arrows">
+									&lt;&lt;前日
+								</a>
+							</li>
+							<li	 class="page_numbers">
+								<a th:href="@{/}">
+									<span class="next-arrows">今日</span>
+								</a>
+							</li>
+							<li class="page_right_arrow">
+								<a th:href="@{'/' + ${today.plusDays(1)}}" class="next-arrows">
+									次日&gt;&gt;
+								</a>
+							</li>
+						</ul>
+					</div>
+
 					<!-- 部署 -->
 					<div class="busyo-block">
-						<label >部署：</label><label th:text="${Luser.rolename}"></label><span id="insert_errors" th:text="${errormsg}" ></span>
+						<strong>部署：</strong><label th:text="${Luser.rolename}"></label><span id="insert_errors" th:text="${errormsg}" ></span>
 					</div>
 					<!-- 従業時間 -->
 					<p th:text="${errmsg}"></p>
 					<div class="worktime-block">
-						<label>従業時間：</label>
+						<strong>従業時間：</strong>
 						<select name="startTime">
 							<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '09:00'}"></option>
 						</select>～
@@ -53,21 +90,21 @@
 				</form>
 			</div>
 <!-- ******************************************************************* -->
-		<div>
+		<div >
 			<ul>
 				<li class="page_left_arrow">
-					<a th:href="@{'/' + ${today.minusMonths(1)}}">
-						&lt;&lt;前
+					<a th:href="@{'/' + ${today.minusMonths(1)}}"class="next-arrows">
+						&lt;&lt;先月
 					</a>
 				</li>
 				<li	 class="page_numbers">
 					<a th:href="@{/}">
-						<span >今月</span>
+						<span class="next-arrows">今月</span>
 					</a>
 				</li>
 				<li class="page_right_arrow">
-					<a th:href="@{'/' + ${today.plusMonths(1)}}">
-						次&gt;&gt;
+					<a th:href="@{'/' + ${today.plusMonths(1)}}" class="next-arrows">
+						来月&gt;&gt;
 					</a>
 				</li>
 			</ul>
@@ -86,34 +123,57 @@
 					<td th:text="${data.endTime}" class="DateTable-Data"></td>
 				</tr>
 			</tbody>
+
 		</table>
+		<div >
+			<ul>
+				<li class="page_left_arrow">
+					<a th:href="@{'/' + ${today.minusMonths(1)}}"class="next-arrows">
+						&lt;&lt;先月
+					</a>
+				</li>
+				<li	 class="page_numbers">
+					<a th:href="@{/}">
+						<span class="next-arrows">今月</span>
+					</a>
+				</li>
+				<li class="page_right_arrow">
+					<a th:href="@{'/' + ${today.plusMonths(1)}}" class="next-arrows">
+						来月&gt;&gt;
+					</a>
+				</li>
+			</ul>
 		</div>
-			<div  class="main-text-custom-right" >
-			<p class="download_topic">-勤務表をcsv形式でダウンロードできます</p>
-			<form th:action="@{/download}" method="post" >
-			     <input type="hidden" name="D_today" th:value="${today}">
-					<table>
-					<tbody>
-					<tr>
-						<td><label for="filename">ファイル名：</label></td>
-						<td><input type="text" name="filename" id="filename" value=""></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><input type="submit" value="ダウンロード(.csv)" ></td>
-					</tr>
-					</tbody>
-					</table>
-				</form>
-				</div>
+		</div>
+		<div  class="main-text-custom-right" >
+			<div class="download-form">
+				<p class="download_topic">
+					-勤務表をcsv形式でダウンロードできます<br>
+					未入力の場合は既定のファイル名になります
+				</p>
+				<form th:action="@{/download}" method="post" >
+				     <input type="hidden" name="D_today" th:value="${today}">
+						<table>
+						<tbody>
+						<tr>
+							<td><label for="filename">ファイル名：</label></td>
+							<td><input type="text" name="filename" id="filename" value=""></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input type="submit" value="ダウンロード(.csv)" ></td>
+						</tr>
+						</tbody>
+						</table>
+					</form>
 			</div>
+				</div>
+	</div>
+
 	</main>
 
 	<footer>
 		<div class="debug3">
-			<form th:action="@{/logout}" method="post">
-					<button>ログアウト</button>
-				</form>
 		</div>
 	</footer>
 <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>

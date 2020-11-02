@@ -1,6 +1,7 @@
 package com.example.demo.doamin.service.plans;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +37,48 @@ public class PlansService {
 	 * @return 予定表一件/null
 	 */
 	public Optional<Plans> getOnePlan(String today){
-		return repository.getOneToday(Date.valueOf(today));
+		Optional<Plans> plan =Optional.ofNullable(new Plans());
+		if(repository.getOneToday(Date.valueOf(today)).isEmpty()) {
+			plan.get().setInitData();
+		}
+		else {
+			plan=repository.getOneToday(Date.valueOf(today));
+		}
+
+		return plan;
 	}
+
+	/**
+	 * 今日を基準に今日の予定があれば「今日の予定＋その次の予定のリスト」を取得
+	 * 今日の予定がなければ「予定なしデータを入れた予定＋その次の予定リスト」を取得
+	 *
+	 * @param today
+	 * @return
+	 */
+	public List<Plans> getOneSomeDayPlan(String today){
+		Date onToday = Date.valueOf(today);
+		Plans plan =new Plans();
+		plan.setInitData();
+		List<Plans> planslist = new ArrayList<Plans>();
+		if(repository.getOneToday(onToday).isEmpty()) {
+			//今日ないなら今日以上の昇順データから一件
+			planslist.add(plan);
+			planslist.add( repository.getByTosayGreaterAsc(onToday).get(0));
+
+		}
+		else {
+			//今日あるならいれる
+			planslist.add(repository.getOneToday(onToday).get());
+			planslist.add( repository.getByTosayGreaterAsc(onToday).get(0));
+
+		}
+		return planslist;
+	}
+//	public List<Plans> getOnePlanVali(String today){
+//		 if(repository.getOneToday(Date.valueOf(today)).isEmpty()){
+//			 Plans plan =
+//		 };
+//	}
 
 	public void deleteOnePlanByToday(String today) {
 		repository.deleteBythisToday(Date.valueOf(today));
