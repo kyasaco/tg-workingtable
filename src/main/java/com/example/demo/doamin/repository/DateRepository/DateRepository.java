@@ -28,7 +28,7 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	Page<DateEntity> findAll(Pageable pageable);
 	@Query(value="SELECT * FROM Date7 WHERE workers_id=?1 and today=?2"
 			,nativeQuery = true)
-	List<DateEntity> findQueryTandWID(Integer workersid,Date today);
+	List<DateEntity> findQueryTandWID(String workersid,Date today);
 
 	/**
 	 * @param id
@@ -46,10 +46,10 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	 * @return Monthとidが一致したデータリスト
 	 */
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\' AND workers_id = ?3 ORDER BY today ASC",nativeQuery=true)
-	List<DateEntity> findQueryByMonth(String Year,String Month,Integer id);
+	List<DateEntity> findQueryByMonth(String Year,String Month,String id);
 
 	/*page用*/
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\' AND workers_id = ?3",nativeQuery=true)
-	Page<DateEntity> findQueryByMonthForPage(String Year,String Month,Integer id,Pageable pageable);
+	Page<DateEntity> findQueryByMonthForPage(String Year,String Month,String id,Pageable pageable);
 
 }

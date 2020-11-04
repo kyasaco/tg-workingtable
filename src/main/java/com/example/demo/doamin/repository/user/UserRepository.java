@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.RoleName;
 import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.model.UserEcpertPass;
@@ -27,11 +28,13 @@ public interface UserRepository extends JpaRepository<User, String>{
 			String lastname,String rolename,String ex_userid);
 
 	@Query(value="SELECT userid,firstname,lastname ,rolename FROM usrs3",nativeQuery = true)
-	List<User> findAllexpass();
+	List<Object[]> findAllexpass();
 
-	@Query(value="DELETE FROM usrs3 WHERE userid in(:dcheck)",nativeQuery = true)
 	@Modifying
-	void deleteCheck(@Param("dcheck")List<String> dcheck);
+	@Query(value="DELETE FROM usrs3 WHERE userid IN(:values) ",nativeQuery = true)
+	void deleteCheck(@Param("values")List<String> dcheck);
+
+
 	@Query(value="SELECT DISTINCT rolename FROM usrs3",nativeQuery = true)
 	List<RoleName> findByRolenamesDistinct();
 }

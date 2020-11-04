@@ -16,6 +16,7 @@
 <body>
 <form th:action="@{/Admin/ConfUser}" method="post" th:object="${user_form}">
 	<table class="DateTable">
+	<caption><strong>利用者設定</strong></caption>
 		<thead class="DateTable-thead">
 			<th class="DateTable-Column">従業員ID</th>
 			<th class="DateTable-Column">苗字</th>
@@ -39,9 +40,8 @@
 						<option th:each="oioi:${SELECT_ROLE}" th:value="${oioi}" th:text="${oioi}" th:selected="${oioi == data.rolename}"></option>
 					</select>
 				</td>
-				<td>
+				<td class="DateTable-Data">
 					<input type="checkbox" name="dcheck" th:checked="${dcheck}" th:value="${data.userid}">
-					<input type="hidden" name="insrt_check"  value="0">
 				</td>
 			</tr>
 		</tbody>

@@ -33,7 +33,7 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private RoleName rolename;
 
-//	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+//	@OneToMany(cascade = CascadeType.ALL)
 //	private List<DateEntity> dateEntities;
 
 }

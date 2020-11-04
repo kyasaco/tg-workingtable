@@ -27,21 +27,28 @@ public class UserService {
 	private final UserRepository repository;
 	private final PasswordEncoder passwordEncoder;
 
+	@Transactional
 	public int updateUsers(UserConfForm ucf,List<String> dcheck) {
-		if(dcheck!=null) {
+		List<User> expass = repository.findByOrderByUseridAsc();
+		if(dcheck != null) {
 			repository.deleteCheck(dcheck);
+			repository.saveAll(expass);
 		}
-		List<User> expass = repository.findAllexpass();
-		List<UserEcpertPass> before_list = new ArrayList<UserEcpertPass>();
-		for(int i = 0; i<(ucf.getUserid().size());i++) {
-			UserEcpertPass uep = new UserEcpertPass();
+
+		List<User> before_list = new ArrayList<User>();
+		for(int i = 0; i<(expass.size());i++) {
+			User uep = new User();
 			uep.setUserid(ucf.getUserid().get(i));
 			uep.setFirstname(ucf.getFirstname().get(i));
+			uep.setPassword(expass.get(i).getPassword());
 			uep.setLastname(ucf.getLastname().get(i));
-			uep.setRolename(ucf.getRolename().get(i));
+			uep.setRolename(RoleName.valueOf(ucf.getRolename().get(i)));
 			before_list.add(uep);
 		}
-//		List<UserEcpertPass> after_list = subtract(before_list, expass);
+		List<User> after_list = subtract(before_list, expass);
+		if(after_list != null) {
+			repository.saveAll(after_list);
+		}
 		return 0;
 	}
 
@@ -77,9 +84,9 @@ public class UserService {
 	 * @param list2
 	 * @return
 	 */
-	public static List<UserEcpertPass> subtract(List<UserEcpertPass> list1, List<UserEcpertPass> list2) {
-	    final HashSet<UserEcpertPass> list2Set = new HashSet<>(list2);
-	    final List<UserEcpertPass> resultList = list1.stream()
+	public static List<User> subtract(List<User> list1, List<User> list2) {
+	    final HashSet<User> list2Set = new HashSet<>(list2);
+	    final List<User> resultList = list1.stream()
 	            .filter(p -> {
 	                return (! list2Set.contains(p));
 	            })

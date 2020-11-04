@@ -44,7 +44,7 @@ public class DateService {
 	 * @param today
 	 * @return
 	 */
-	public List<DateEntity> findOneTandWID(Integer workersid,Date today) {
+	public List<DateEntity> findOneTandWID(String workersid,Date today) {
 
 		return repository.findQueryTandWID(workersid, today);
 	}
@@ -54,7 +54,7 @@ public class DateService {
 	 * @param id
 	 * @return 選択した月と認証しているユーザーIDでデータを取得する
 	 */
-	public List<DateEntity> findQueryMonth(LocalDate today,Integer id){
+	public List<DateEntity> findQueryMonth(LocalDate today,String id){
 		String month = String.valueOf(today.getMonthValue());
 		String year = String.valueOf(today.getYear());
 		if(today.getMonthValue() < 10) {
@@ -81,13 +81,12 @@ public class DateService {
 			LocalDate today,
 			String bid,
 			Pageable pageable){
-		Integer id = Integer.valueOf(bid);
 		String month = String.valueOf(today.getMonthValue());
 		String year = String.valueOf(today.getYear());
 		if(today.getMonthValue() < 10) {
 			month = "0" + month;
 		}
-		return repository.findQueryByMonthForPage(year,month, id, pageable);
+		return repository.findQueryByMonthForPage(year,month, bid, pageable);
 	}
 	//idで一件削除
 	/**
@@ -116,13 +115,12 @@ public class DateService {
 		int result = 0;
 		LocalTime Pasttime = LocalTime.parse(entryForm.getStartTime(), DateTimeFormatter.ISO_LOCAL_TIME);
 		LocalTime Futuretime = LocalTime.parse(entryForm.getEndTime(), DateTimeFormatter.ISO_LOCAL_TIME);
-		Integer workersid = Integer.valueOf(entryForm.getWorkersId());
 		Date today = Date.valueOf(entryForm.getToday());
 
 		if(Pasttime.isAfter(Futuretime) || Pasttime == Futuretime) {
 			return 1;
 		}
-		else if(!findOneTandWID(workersid, today).isEmpty()) {
+		else if(!findOneTandWID(entryForm.getWorkersId(), today).isEmpty()) {
 			result =2;
 			repository.deleteBythisId(today);
 		}
@@ -145,14 +143,13 @@ public class DateService {
 		final String[] week_name = {"日", "月", "火", "水", "木", "金", "土"};
 		String month = String.valueOf(today.getMonthValue());
 		String year = String.valueOf(today.getYear());
-		Integer id = Integer.valueOf(bid);
 
 		if(today.getMonthValue() < 10) {
 			month = "0" + month;
 		}
 		Calendar clCalendar = Calendar.getInstance();
 		List<OutDate> out_datecsv = new ArrayList<OutDate>();
-		List<DateEntity> wk = repository.findQueryByMonth(year,month,id);
+		List<DateEntity> wk = repository.findQueryByMonth(year,month,bid);
 		for(DateEntity s : wk) {
 			OutDate hako = new OutDate();
 			clCalendar.setTime(s.getToday());
@@ -183,7 +180,7 @@ public class DateService {
 			return findByWorkersId(userid);
 		}
 		else {
-			return findOneTandWID(Integer.valueOf(userid), Date.valueOf(today));
+			return findOneTandWID(userid, Date.valueOf(today));
 		}
 	}
 

@@ -41,7 +41,6 @@ import lombok.AllArgsConstructor;
 
 @Controller
 @AllArgsConstructor
-@Secured("ROLE_ADMIN")
 @RequestMapping("/Admin")
 public class AdminController {
 	private final DateService dateservice;
@@ -51,11 +50,9 @@ public class AdminController {
 	@GetMapping
 	public ModelAndView getConf(
 			HttpServletResponse httpServletResponse,
-			@RequestParam("today")String today,
 			ModelAndView mav) {
 
 		mav.setViewName("Admin/AdminConfForm");
-		mav.addObject("today", today);
 		return mav;
 	}
 /**Dateマッピング********************************************************************/
@@ -116,6 +113,7 @@ public class AdminController {
 		ModelAndView mav) {
 		List<User> data = userservice.findAllAsc();
 		List<RoleName> SELECT_ROLE = userservice.findDistinByRolenames();
+
 		mav.addObject("SELECT_ROLE", SELECT_ROLE);
 		mav.addObject("user_data", data);
 		mav.setViewName("Admin/AdminUserConfgure");
@@ -125,6 +123,7 @@ public class AdminController {
 	}
 
 	@PostMapping("/ConfUser")
+	@Transactional
 	public ModelAndView postUserConf(
 			@ModelAttribute("user_form")UserConfForm ucf,
 			@RequestParam(value="dcheck",required = false)List<String> dcheck,
