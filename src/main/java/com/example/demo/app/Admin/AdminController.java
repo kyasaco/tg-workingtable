@@ -110,6 +110,7 @@ public class AdminController {
 	/**Userマッピング********************************************************************/
 	@GetMapping("/ConfUser")
 	public ModelAndView getUserConf(
+		@ModelAttribute("user_form")UserConfForm ucf,
 		@RequestParam("today")
 		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
 		ModelAndView mav) {
@@ -119,6 +120,21 @@ public class AdminController {
 		mav.addObject("user_data", data);
 		mav.setViewName("Admin/AdminUserConfgure");
 		mav.addObject("today", today);
+
+		return mav;
+	}
+
+	@PostMapping("/ConfUser")
+	public ModelAndView postUserConf(
+			@ModelAttribute("user_form")UserConfForm ucf,
+			@RequestParam(value="dcheck",required = false)List<String> dcheck,
+			ModelAndView mav) {
+		userservice.updateUsers(ucf, dcheck);
+		List<User> data = userservice.findAllAsc();
+		List<RoleName> SELECT_ROLE = userservice.findDistinByRolenames();
+		mav.addObject("SELECT_ROLE", SELECT_ROLE);
+		mav.addObject("user_data", data);
+		mav.setViewName("Admin/AdminUserConfgure");
 
 		return mav;
 	}

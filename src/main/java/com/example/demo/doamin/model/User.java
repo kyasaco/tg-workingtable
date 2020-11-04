@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,18 +21,19 @@ import lombok.Setter;
 @Table(name="usrs3")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class User implements Serializable {
 	@Id
 	private String userid;
 	private String password;
 	private String firstname;
 	private String lastname;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private RoleName rolename;
-	
+
 //	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 //	private List<DateEntity> dateEntities;
-	
+
 }
