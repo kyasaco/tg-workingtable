@@ -52,4 +52,6 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\' AND workers_id = ?3",nativeQuery=true)
 	Page<DateEntity> findQueryByMonthForPage(String Year,String Month,String id,Pageable pageable);
 
+	@Query(value="SELECT start_time,end_time FROM Date7 WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\' AND workers_id = ?3 ",nativeQuery = true)
+	List<Object[]> findQueryBySTET(String Year,String Month,String id);
 }

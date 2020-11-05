@@ -1,6 +1,7 @@
 package com.example.demo.doamin.service.DataService;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -184,6 +185,30 @@ public class DateService {
 		}
 	}
 
+	public double getSTETMinus(LocalDate today,String id) {
+		String month = String.valueOf(today.getMonthValue());
+		if(today.getMonthValue() < 10) {
+			month = "0" + month;
+		}
+		List<Object[]> stet_list = repository.findQueryBySTET(String.valueOf(today.getYear()),
+				month,
+				id);
+		double  sum_time = 0.0;
+		for(Object[] stet : stet_list) {
+			LocalTime st = ((Time) stet[0]).toLocalTime();
+			LocalTime et = ((Time) stet[1]).toLocalTime();
+			sum_time += (double)(et.getHour() - st.getHour());
+			int stMin = st.getMinute();
+			int etMin = et.getMinute();
+			if(etMin+ stMin == 60) {
+				sum_time += 1.0;
+			}else if(etMin != stMin) {
+				sum_time += 0.5;
+			}
+
+		}
+		return sum_time - ((double)stet_list.size());
+	}
 	//todayで検索
 	public List<DateEntity> findByToday(Date today){
 		return repository.findByToday(today);

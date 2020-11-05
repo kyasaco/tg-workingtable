@@ -27,17 +27,24 @@ public class UserService {
 	private final UserRepository repository;
 	private final PasswordEncoder passwordEncoder;
 
-	@Transactional
+	/**
+	 * @param ucf 従業員ID、苗字、名前、ロールを持ったクラス
+	 * @param dcheck 削除する従業員IDが入ったリスト
+	 * @return
+	 */
 	public int updateUsers(UserConfForm ucf,List<String> dcheck) {
 		List<User> expass = repository.findByOrderByUseridAsc();
 		if(dcheck != null) {
 			repository.deleteCheck(dcheck);
 			repository.saveAll(expass);
 		}
-
+		List<String> cnt = new ArrayList<String>();
 		List<User> before_list = new ArrayList<User>();
 		for(int i = 0; i<(expass.size());i++) {
 			User uep = new User();
+			if(!ucf.getUserid().get(i).equals(expass.get(i).getUserid())) {
+				cnt.add(expass.get(i).getUserid());
+			}
 			uep.setUserid(ucf.getUserid().get(i));
 			uep.setFirstname(ucf.getFirstname().get(i));
 			uep.setPassword(expass.get(i).getPassword());
@@ -47,6 +54,9 @@ public class UserService {
 		}
 		List<User> after_list = subtract(before_list, expass);
 		if(after_list != null) {
+				if(cnt != null) {
+					repository.deleteCheck(cnt);
+				}
 			repository.saveAll(after_list);
 		}
 		return 0;

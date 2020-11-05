@@ -30,7 +30,9 @@
 
 <main>
 	<div class="debug2">
+	<!-- 予定一覧 -->
 		<div class="todays_plan">
+			<!-- 今日の予定一覧 -->
 			<ul class="todays_plan_ul" >
 				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_today">今日の予定</h3></li>
 				<li class="plans_list plans_list_title" th:text="${plan_data[0].title}"></li>
@@ -43,8 +45,9 @@
 
 				<li class="plans_list plans_list_holiday"  th:if="${plan_data[0].holiday}" th:text="休日です"></li>
 			</ul>
+			<!-- 次の予定一覧 -->
 			<ul class="somedays_plan_ul">
-				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_nextday">次([[${#temporals.format(today,'yyyy年MM月dd日')}]])の予定</h3></li>
+				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_nextday">次([[${#dates.format(plan_data[1].today,'yyyy年MM月dd日')}]])の予定</h3></li>
 				<li class="plans_list  plans_list_title"th:text="${plan_data[1].title}"></li>
 				<li class="plans_list plans_list_plans" th:if="${plan_data[1].plans}">
 					<th:block th:each="str, stat : ${plan_data[1].plans.split('\r\n|\r|\n', -1)}">
@@ -97,6 +100,7 @@
 							<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '18:00'}"></option>
 						</select>
 						<input type="submit" value="登録" class="submit-button" name="insert">
+						<span th:text="${sum_time}"></span>
 					</div>
 				</form>
 			</div>
@@ -159,7 +163,7 @@
 		<div  class="main-text-custom-right" >
 			<div class="download-form">
 				<p class="download_topic">
-					-勤務表をcsv形式でダウンロードできます<br>
+					・勤務表をcsv形式でダウンロードできます<br>
 					未入力の場合は既定のファイル名になります
 				</p>
 				<form th:action="@{/download}" method="post" >
@@ -178,7 +182,7 @@
 						</table>
 					</form>
 			</div>
-				</div>
+		</div>
 	</div>
 
 	</main>

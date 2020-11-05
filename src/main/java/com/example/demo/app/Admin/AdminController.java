@@ -47,6 +47,15 @@ public class AdminController {
 	private final UserService userservice ;
 	private final PlansService plansrservice;
 
+	final List<RoleName> SELECT_ROLE = new ArrayList<RoleName>() {
+		{
+			for(RoleName str : RoleName.values()) {
+				add(str);
+			}
+
+		}
+	};
+
 	@GetMapping
 	public ModelAndView getConf(
 			HttpServletResponse httpServletResponse,
@@ -108,16 +117,11 @@ public class AdminController {
 	@GetMapping("/ConfUser")
 	public ModelAndView getUserConf(
 		@ModelAttribute("user_form")UserConfForm ucf,
-		@RequestParam("today")
-		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
 		ModelAndView mav) {
 		List<User> data = userservice.findAllAsc();
-		List<RoleName> SELECT_ROLE = userservice.findDistinByRolenames();
-
 		mav.addObject("SELECT_ROLE", SELECT_ROLE);
 		mav.addObject("user_data", data);
 		mav.setViewName("Admin/AdminUserConfgure");
-		mav.addObject("today", today);
 
 		return mav;
 	}
@@ -130,7 +134,6 @@ public class AdminController {
 			ModelAndView mav) {
 		userservice.updateUsers(ucf, dcheck);
 		List<User> data = userservice.findAllAsc();
-		List<RoleName> SELECT_ROLE = userservice.findDistinByRolenames();
 		mav.addObject("SELECT_ROLE", SELECT_ROLE);
 		mav.addObject("user_data", data);
 		mav.setViewName("Admin/AdminUserConfgure");

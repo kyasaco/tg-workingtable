@@ -20,7 +20,6 @@
   <div class="form_custom">
     <h2>ログインフォーム</h2>
    <p th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null" th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}" class="error_msg">ログインだめ</p>
-  <p th:if="${param.error}" class="error_msg" >接続エラーが発生しました</p>
     <!-- th:action="@{/login}"でthymeleaf側が自動的にCSRF対策を行う -->
     <form th:action="@{/login}" method="post">
       <table>
