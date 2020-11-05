@@ -218,6 +218,7 @@ function createCalendar(calendar, element, adjuster){
 		{
 			day.className += "cld-day currMonth sat";
 			day.innerHTML+= '<style>.cld-day.currMonth.sat{background-color:#95eaea;}</style>';
+
 		}
 		else if((cnt-1)%7==0)
 		{

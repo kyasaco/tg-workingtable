@@ -62,7 +62,7 @@
 			<div class="main-text-custom">
 				<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
 					<!-- 実行時の日付 -->
-					<strong>日付：</strong><label th:text="${#temporals.format(today,'yyyy年MM月dd日')}"> </label>
+					<strong>日付：</strong><label th:text="${#temporals.format(today,'yyyy年MM月dd日(E)')}"> </label>
 					<input type="hidden" form="form1" th:value="${today}" name="today">
 					<a th:href="@{/calendar(todayCarendar=${today})}">カレンダー</a>
 					<div class="day-arrow">
@@ -100,8 +100,15 @@
 							<option th:each="oioi:${select_a}" th:value="${oioi.value}" th:text="${oioi.key}" th:selected="${oioi.key == '18:00'}"></option>
 						</select>
 						<input type="submit" value="登録" class="submit-button" name="insert">
-						<span th:text="${sum_time}"></span>
 					</div>
+					<div>
+							<strong>要勤務日数：</strong><span  th:text="|${weekdays_sum/8}日|"></span>
+						</div>
+						<div class="month_workingtime">
+							<strong>実働時間/要所定時間：</strong>
+							<span  th:text="|${sum_time}時間|"></span>/<span  th:text="|${weekdays_sum}時間|"></span>
+						</div>
+
 				</form>
 			</div>
 <!-- ******************************************************************* -->

@@ -20,6 +20,11 @@ import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.repository.DateRepository.DateRepository;
 
+import ajd4jp.AJD;
+import ajd4jp.AJDException;
+import ajd4jp.Holiday;
+import ajd4jp.Month;
+import ajd4jp.Week;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -185,6 +190,12 @@ public class DateService {
 		}
 	}
 
+	/**
+	 *
+	 * @param today
+	 * @param id
+	 * @return
+	 */
 	public double getSTETMinus(LocalDate today,String id) {
 		String month = String.valueOf(today.getMonthValue());
 		if(today.getMonthValue() < 10) {
@@ -217,4 +228,30 @@ public class DateService {
 	public List<DateEntity> findByWorkersId(String userid){
 		return repository.findByWorkersIdOrderByToday(userid);
 	}
+
+	/**
+	 * @param today
+	 * @return
+	 * @throws AJDException
+	 */
+	public int getWeekDays(LocalDate today) throws AJDException {
+	    // 2009/5 を設定。
+		int weekday_sum = 0;
+	    Month  mon = new Month(today.getYear(), today.getMonthValue());
+
+	    for(AJD day: mon.getDays()) {
+	      int   d = day.getDay();
+	      Week  w = day.getWeek();
+	      Holiday h = Holiday.getHoliday(day);
+	      String  note = "";
+	      if (h == null && !w.getShortName().equals("Sun") && !w.getShortName().equals("Sat")) {
+	        weekday_sum++;
+
+	      }
+	      String  line = String.format("%2d(%s): %s", d, w.getJpName(), note);
+	      System.out.println(line);
+	    }
+	    return weekday_sum*8;
+	}
+
  }
