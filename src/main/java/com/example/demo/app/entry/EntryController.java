@@ -48,6 +48,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+
+import ajd4jp.AJDException;
+
 import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 
 import io.github.classgraph.AnnotationEnumValue;
@@ -113,7 +116,7 @@ public class EntryController {
 	@PathVariable(name="today",required = false)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate today,
 	@PageableDefault(page = 0,size = 31,sort = {"today"},direction =Direction.ASC)Pageable pageable,
-	ModelAndView  mav)
+	ModelAndView  mav) throws AJDException
 	{
 		if(today==null ){
 			today=LocalDate.now();
@@ -127,8 +130,9 @@ public class EntryController {
 			today,
 			workersUserDetails.getUsername(),
 			pageable);
-
+		int weekdays_sum = dateservice.getWeekDays(today);
 		double sum_time = dateservice.getSTETMinus(today, workersUserDetails.getUsername());
+		mav.addObject("weekdays_sum", weekdays_sum);
 		mav.addObject("sum_time", sum_time);
 		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
 		mav.addObject("plan_data", plan);
