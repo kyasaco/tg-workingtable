@@ -22,7 +22,7 @@
 					<hr>
 					<td id="pwd_error">
 
-						<label id="pwd_lavel" for="userid">User<span class="requried_msg">(必須)</span>:</label>
+						<label id="pwd_lavel" for="userid">従業員ID<span class="requried_msg">(必須)</span>:</label>
 						<div class="smart_errors"><span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" class="error_msg"></span></div>
 					</td>
 				</tr>
@@ -32,7 +32,7 @@
 
 				<tr>
 					<td id="pwd_error">
-						<label id="pwd_lavel" for="password">Password<span class="requried_msg">(必須)</span>:</label>
+						<label id="pwd_lavel" for="password">パスワード<span class="requried_msg">(必須)</span>:</label>
 						<div  class="smart_errors"><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error_msg"></span></div>
 					</td>
 				</tr>
@@ -78,7 +78,7 @@
 				<tr id="form_go">
 					<td>
 						<hr>
-						<p class="topic">Userは英数字4文字<br>Passwordは数字のみ6桁以上20桁未満です</p>
+						<p class="topic">従業員IDは<span class="important">英数字4文字</span><br>パスワードは<span class="important">数字のみ6桁以上20桁未満です</span></p>
 						<button  onclick="location.href='/insert'" >クリア</button>
 						<input type="submit"  name="go" value="登録">
 					</td>

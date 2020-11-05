@@ -41,21 +41,27 @@ import lombok.AllArgsConstructor;
 
 @Controller
 @AllArgsConstructor
-@Secured("ROLE_ADMIN")
 @RequestMapping("/Admin")
 public class AdminController {
 	private final DateService dateservice;
 	private final UserService userservice ;
 	private final PlansService plansrservice;
 
+	final List<RoleName> SELECT_ROLE = new ArrayList<RoleName>() {
+		{
+			for(RoleName str : RoleName.values()) {
+				add(str);
+			}
+
+		}
+	};
+
 	@GetMapping
 	public ModelAndView getConf(
 			HttpServletResponse httpServletResponse,
-			@RequestParam("today")String today,
 			ModelAndView mav) {
 
 		mav.setViewName("Admin/AdminConfForm");
-		mav.addObject("today", today);
 		return mav;
 	}
 /**Dateマッピング********************************************************************/
@@ -110,15 +116,27 @@ public class AdminController {
 	/**Userマッピング********************************************************************/
 	@GetMapping("/ConfUser")
 	public ModelAndView getUserConf(
-		@RequestParam("today")
-		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
+		@ModelAttribute("user_form")UserConfForm ucf,
 		ModelAndView mav) {
 		List<User> data = userservice.findAllAsc();
-		List<RoleName> SELECT_ROLE = userservice.findDistinByRolenames();
 		mav.addObject("SELECT_ROLE", SELECT_ROLE);
 		mav.addObject("user_data", data);
 		mav.setViewName("Admin/AdminUserConfgure");
-		mav.addObject("today", today);
+
+		return mav;
+	}
+
+	@PostMapping("/ConfUser")
+	@Transactional
+	public ModelAndView postUserConf(
+			@ModelAttribute("user_form")UserConfForm ucf,
+			@RequestParam(value="dcheck",required = false)List<String> dcheck,
+			ModelAndView mav) {
+		userservice.updateUsers(ucf, dcheck);
+		List<User> data = userservice.findAllAsc();
+		mav.addObject("SELECT_ROLE", SELECT_ROLE);
+		mav.addObject("user_data", data);
+		mav.setViewName("Admin/AdminUserConfgure");
 
 		return mav;
 	}

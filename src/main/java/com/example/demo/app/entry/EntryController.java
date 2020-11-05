@@ -112,12 +112,13 @@ public class EntryController {
 	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
 	@PathVariable(name="today",required = false)
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate today,
-	@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable,
+	@PageableDefault(page = 0,size = 31,sort = {"today"},direction =Direction.ASC)Pageable pageable,
 	ModelAndView  mav)
 	{
 		if(today==null ){
 			today=LocalDate.now();
 		}
+
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today",today);
 		mav.setViewName("index");
@@ -127,6 +128,8 @@ public class EntryController {
 			workersUserDetails.getUsername(),
 			pageable);
 
+		double sum_time = dateservice.getSTETMinus(today, workersUserDetails.getUsername());
+		mav.addObject("sum_time", sum_time);
 		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
 		mav.addObject("plan_data", plan);
 		mav.addObject("DateTableData", datedata.getContent());
@@ -158,6 +161,8 @@ public class EntryController {
 			entryForm.getLDtoday(),
 			workersUserDetails.getUsername(),
 			pageable);
+		double sum_time = dateservice.getSTETMinus(entryForm.getLDtoday(), workersUserDetails.getUsername());
+		mav.addObject("sum_time", sum_time);
 		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
 		mav.addObject("plan_data", plan);
 

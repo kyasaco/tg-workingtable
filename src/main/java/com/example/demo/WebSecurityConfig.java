@@ -50,8 +50,13 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 		//authorizeRequests:何のリクエストを許可するか
 		http.authorizeRequests()
 				.mvcMatchers("/js/**","/css/**","/insertForm","/insert","/ErrorPage").permitAll()
+				.and()
+			.authorizeRequests()
 				.mvcMatchers("/Admin/**").access("hasRole('ADMIN') and isFullyAuthenticated()")
 				.anyRequest().authenticated()
+				.and()
+			.exceptionHandling()
+				.accessDeniedPage("/ErrorPage")
 				.and()
 			.formLogin()
 				.loginPage("/loginForm")
