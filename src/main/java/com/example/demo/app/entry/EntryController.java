@@ -150,7 +150,7 @@ public class EntryController {
 			BindingResult result,
 			ModelAndView  mav,
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
-			@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable)
+			@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable) throws AJDException
 	{
 		mav.addObject("select_a",SELECT_TIME);
 		mav.addObject("today", entryForm.getLDtoday());
@@ -165,11 +165,13 @@ public class EntryController {
 			entryForm.getLDtoday(),
 			workersUserDetails.getUsername(),
 			pageable);
+
+		int weekdays_sum = dateservice.getWeekDays(entryForm.getLDtoday());
 		double sum_time = dateservice.getSTETMinus(entryForm.getLDtoday(), workersUserDetails.getUsername());
 		mav.addObject("sum_time", sum_time);
 		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
 		mav.addObject("plan_data", plan);
-
+		mav.addObject("weekdays_sum", weekdays_sum);
 		mav.addObject("DateTableData", datedata.getContent());
 		return mav;
 	}

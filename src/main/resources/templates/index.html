@@ -106,7 +106,7 @@
 						</div>
 						<div class="month_workingtime">
 							<strong>実働時間/要所定時間：</strong>
-							<span  th:text="|${sum_time}時間|"></span>/<span  th:text="|${weekdays_sum}時間|"></span>
+							<span class="month_worktime" th:text="|${sum_time}時間|"></span>/<span class="month_worktime" th:text="|${weekdays_sum}時間|"></span>
 						</div>
 
 				</form>
@@ -140,7 +140,7 @@
 			</thead>
 			<tbody class="DateTable-tbody">
 				<tr th:each="data:${DateTableData}">
-					<td th:text="${#dates.format(data.today,'yyyy年MM月dd日')}" class="DateTable-Data"></td>
+					<td th:text="${#dates.format(data.today,'MM月dd日(E)')}" class="DateTable-Data"></td>
 					<td th:text="${#dates.format(data.startTime,'HH時mm分')}" class="DateTable-Data"></td>
 					<td th:text="${#dates.format(data.endTime,'HH時mm分')}" class="DateTable-Data"></td>
 				</tr>
@@ -199,6 +199,7 @@
 		</div>
 	</footer>
 <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<script th:src="@{/js/main_js.js}"></script>
 <!-- import js.file CDN↓ -->
 <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
 <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>

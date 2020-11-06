@@ -2,6 +2,7 @@ package com.example.demo.doamin.repository.plans;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,8 @@ public interface PlansRepository extends JpaRepository<Plans, Integer> {
 
 	@Query(value="SELECT * FROM Plans WHERE today  > ?1 ORDER BY today ASC",nativeQuery = true)
 	List<Plans> getByTosayGreaterAsc(Date today);
+
+	@Query(value="SELECT today,holiday FROM Plans WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\'",nativeQuery = true)
+	List<Object[]> getHolidayOneMonth(String Year,String Month);
+
 }
