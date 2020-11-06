@@ -1,8 +1,10 @@
 package com.example.demo.doamin.service.plans;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -103,4 +105,14 @@ public class PlansService {
 		return result;
 	}
 
+	public List<Object[]> checkPlansHolidays(LocalDate today) {
+		String Month = String.valueOf(today.getMonthValue());
+		String Year = String.valueOf(today.getYear());
+		if(today.getMonthValue() < 10) {
+			Month = "0" + Month;
+		}
+		List<Object[]> a = repository.getHolidayOneMonth(Year, Month);
+		return a;
+
+	}
 }

@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import com.example.demo.app.entry.EntryForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.repository.DateRepository.DateRepository;
+import com.example.demo.doamin.service.plans.PlansService;
 
 import ajd4jp.AJD;
 import ajd4jp.AJDException;
@@ -32,6 +34,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class DateService {
 	private final DateRepository repository;
+	private final PlansService plansservice;
 
 	/**
 	 * useridと一致する一件の取得
@@ -61,11 +64,8 @@ public class DateService {
 	 * @return 選択した月と認証しているユーザーIDでデータを取得する
 	 */
 	public List<DateEntity> findQueryMonth(LocalDate today,String id){
-		String month = String.valueOf(today.getMonthValue());
+		String month = String.format("%02d", today.getMonthValue());
 		String year = String.valueOf(today.getYear());
-		if(today.getMonthValue() < 10) {
-			month = "0" + month;
-		}
 		return repository.findQueryByMonth(year,month,id);
 	}
 
@@ -87,11 +87,8 @@ public class DateService {
 			LocalDate today,
 			String bid,
 			Pageable pageable){
-		String month = String.valueOf(today.getMonthValue());
+		String month = String.format("%02d", today.getMonthValue());
 		String year = String.valueOf(today.getYear());
-		if(today.getMonthValue() < 10) {
-			month = "0" + month;
-		}
 		return repository.findQueryByMonthForPage(year,month, bid, pageable);
 	}
 	//idで一件削除
@@ -115,20 +112,29 @@ public class DateService {
 	 *
 	 * @param entryForm フォームの入力値
 	 * @return 実行結果(0=正常終了、1=時間エラー、2=上書き保存)
+	 * @throws AJDException
 	 */
-	public int SaveFlush(EntryForm entryForm)
+	public int SaveFlush(EntryForm entryForm) throws AJDException
 	{
 		int result = 0;
 		LocalTime Pasttime = LocalTime.parse(entryForm.getStartTime(), DateTimeFormatter.ISO_LOCAL_TIME);
 		LocalTime Futuretime = LocalTime.parse(entryForm.getEndTime(), DateTimeFormatter.ISO_LOCAL_TIME);
 		Date today = Date.valueOf(entryForm.getToday());
+		LocalDate LDtoday = today.toLocalDate();
+		List<Object[]> holidays = plansservice.checkPlansHolidays(LDtoday);
 
+		//始業より終業が前か同じ時刻ならエラー１
+		//休日ならエラー３
+		//すでにあるなら上書き実行
 		if(Pasttime.isAfter(Futuretime) || Pasttime == Futuretime) {
 			return 1;
-		}
-		else if(!findOneTandWID(entryForm.getWorkersId(), today).isEmpty()) {
+		}else if(LDtoday.getDayOfWeek().getValue() == 6 || LDtoday.getDayOfWeek().getValue() == 7 || checkHolidaysAndPholidays(holidays, LDtoday)) {
+			return 3;
+
+		}else if(!findOneTandWID(entryForm.getWorkersId(), today).isEmpty()) {
 			result =2;
 			repository.deleteBythisId(today);
+
 		}
 		DateEntity dateEntity = new DateEntity();
 		dateEntity.setToday(entryForm.getDtoday());
@@ -141,18 +147,16 @@ public class DateService {
 	}
 
 	/**
+	 * csv用
 	 * @param today
 	 * @param id
 	 * @return
 	 */
 	public List<OutDate> DateEntityToOutDate(LocalDate today,String bid){
 		final String[] week_name = {"日", "月", "火", "水", "木", "金", "土"};
-		String month = String.valueOf(today.getMonthValue());
 		String year = String.valueOf(today.getYear());
+		String month = String.format("%02d", today.getMonthValue());
 
-		if(today.getMonthValue() < 10) {
-			month = "0" + month;
-		}
 		Calendar clCalendar = Calendar.getInstance();
 		List<OutDate> out_datecsv = new ArrayList<OutDate>();
 		List<DateEntity> wk = repository.findQueryByMonth(year,month,bid);
@@ -192,15 +196,13 @@ public class DateService {
 
 	/**
 	 *
+	 *
 	 * @param today
 	 * @param id
 	 * @return
 	 */
 	public double getSTETMinus(LocalDate today,String id) {
-		String month = String.valueOf(today.getMonthValue());
-		if(today.getMonthValue() < 10) {
-			month = "0" + month;
-		}
+		String month = String.format("%02d", today.getMonthValue());
 		List<Object[]> stet_list = repository.findQueryBySTET(String.valueOf(today.getYear()),
 				month,
 				id);
@@ -235,23 +237,51 @@ public class DateService {
 	 * @throws AJDException
 	 */
 	public int getWeekDays(LocalDate today) throws AJDException {
-	    // 2009/5 を設定。
+
 		int weekday_sum = 0;
 	    Month  mon = new Month(today.getYear(), today.getMonthValue());
+	    List<Object[]> holidays = plansservice.checkPlansHolidays(today);
 
 	    for(AJD day: mon.getDays()) {
 	      int   d = day.getDay();
 	      Week  w = day.getWeek();
 	      Holiday h = Holiday.getHoliday(day);
-	      String  note = "";
-	      if (h == null && !w.getShortName().equals("Sun") && !w.getShortName().equals("Sat")) {
-	        weekday_sum++;
-
+	      String YMD = String.format("%d-%02d-%02d", mon.getYear(), mon.getMonth(),day.getDay());
+	      if (h == null && !w.getShortName().equals("Sun") && !w.getShortName().equals("Sat") ) {
+	    	  if(!checkHolidays(holidays, YMD)) {
+	    		  weekday_sum++;
+	    	  }
 	      }
-	      String  line = String.format("%2d(%s): %s", d, w.getJpName(), note);
-	      System.out.println(line);
 	    }
 	    return weekday_sum*8;
 	}
 
+	/**
+	 *予定表内の休日と日付を比較して予定表内にあるか、国民の祝日ならばtrue、それ以外はfalseを返す
+	 * @param holidays
+	 * @param YMD
+	 * @return
+	 * @throws AJDException
+	 */
+	public boolean checkHolidaysAndPholidays(List<Object[]> holidays , LocalDate today) throws AJDException  {
+		Month  mon = new Month(today.getYear(), today.getMonthValue());
+		AJD day = mon.getDays()[today.getDayOfMonth()-1];
+	    String YMD = String.format("%d-%02d-%02d", mon.getYear(), mon.getMonth(),day.getDay());
+	    Holiday h = Holiday.getHoliday(day);
+	      for(Object[] obj : holidays) {
+	    	  if( ((Date)obj[0]).toString().equals(YMD) && (Boolean)obj[1] == true || h != null) {
+	    		  	return true;
+	    	  }
+	      }
+	      return false;
+	}
+
+	public boolean checkHolidays(List<Object[]> holidays , String YMD) {
+	      for(Object[] obj : holidays) {
+	    	  if( ((Date)obj[0]).toString().equals(YMD) && (Boolean)obj[1] == true ) {
+	    		  	return true;
+	    	  }
+	      }
+	      return false;
+	}
  }

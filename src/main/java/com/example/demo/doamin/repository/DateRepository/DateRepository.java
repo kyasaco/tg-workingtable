@@ -52,6 +52,15 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\' AND workers_id = ?3",nativeQuery=true)
 	Page<DateEntity> findQueryByMonthForPage(String Year,String Month,String id,Pageable pageable);
 
+	/**
+	 * 指定した年月の全ての始業時間と終業時間をリストで取得する
+	 * @param Year 年
+	 * @param Month 月
+	 * @param id ユーザーID
+	 * @return
+	 */
 	@Query(value="SELECT start_time,end_time FROM Date7 WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\' AND workers_id = ?3 ",nativeQuery = true)
 	List<Object[]> findQueryBySTET(String Year,String Month,String id);
+
+
 }

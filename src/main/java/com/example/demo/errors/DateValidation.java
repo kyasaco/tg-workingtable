@@ -17,6 +17,9 @@ public class DateValidation {
 		case 2:
 			message = "上書きされました";
 			break;
+		case 3:
+			message = "休日です";
+			break;
 		default:
 			message = "不明なエラー";
 			break;
