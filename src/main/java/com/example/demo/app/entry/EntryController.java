@@ -7,11 +7,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
-
-import org.hibernate.query.criteria.internal.expression.function.SubstringFunction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -32,30 +28,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.expression.Lists;
 
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.model.Plans;
-import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.plans.PlansService;
-import com.example.demo.doamin.service.user.UserService;
 import com.example.demo.doamin.service.user.WorkersUserDetails;
 import com.example.demo.errors.DateValidation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import ajd4jp.AJDException;
-
-import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
-
-import io.github.classgraph.AnnotationEnumValue;
 import lombok.AllArgsConstructor;
-import net.bytebuddy.asm.Advice.OffsetMapping.Sort;
 
 /*メインコントローラー：ログインに成功したユーザーの勤務表を出力するメイン画面*/
 @RequestMapping("/")
@@ -118,7 +107,7 @@ public class EntryController {
 	@PageableDefault(page = 0,size = 31,sort = {"today"},direction =Direction.ASC)Pageable pageable,
 	ModelAndView  mav) throws AJDException
 	{
-		if(today==null ){
+		if(today==null){
 			today=LocalDate.now();
 		}
 
