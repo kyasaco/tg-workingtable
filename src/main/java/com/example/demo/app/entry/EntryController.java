@@ -52,14 +52,23 @@ import lombok.AllArgsConstructor;
 @Controller
 public class EntryController {
 
-	/*DIするサービスクラスを宣言*/
+	/**
+	 * DIするサービスクラスを宣言
+	 */
 	private final DateService dateservice;
 	private final DateValidation dateValidation;
 	private final PlansService plansservice;
 	private final DownloadHelper downloadHelper;
+
+	/**
+	 * 現在時刻の定数
+	 */
 	private final LocalDate TODAY_NOW = LocalDate.now();
-	/*定数*/
-	/*開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)*/
+
+
+	/**
+	 * 開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)定数
+	 */
 	final Map<String,String> SELECT_TIME = Collections.unmodifiableMap(new LinkedHashMap<String, String>(){
 		{
 			for(Integer i = 0; i < 24; i++) {
@@ -91,14 +100,28 @@ public class EntryController {
 
 	}
 
-	/*Formの初期化と宣言*/
+	/**
+	 * 勤務表入力フォームの初期化と宣言
+	 *
+	 * @return 初期化されたEntryForm
+	 */
 	@ModelAttribute("EntryForm")
 	EntryForm setUpForm() {
 		EntryForm entryForm = new EntryForm();
 		return entryForm;
 	}
 	//マッピング処理---------------------------------------------------------------------------------------------------------------------------------------
-	/*初期表示。パラメータの日付を受け取る*/
+
+	/**
+	 * 初期表示。パラメータの日付を受け取る
+	 *
+	 * @param workersUserDetails 認証されたユーザー情報
+	 * @param today 開かれている勤務表の日付
+	 * @param pageable ページング情報保持変数
+	 * @param mav モデル＆ビュー
+	 * @return メイン画面(予定一覧、勤務表、勤務表入力欄)の表示
+	 * @throws AJDException
+	 */
 	@GetMapping({"/","/{today}","/calendar/{today}"})
 	public ModelAndView EntryView(
 	@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
@@ -111,9 +134,6 @@ public class EntryController {
 			today=LocalDate.now();
 		}
 
-		mav.addObject("select_a",SELECT_TIME);
-		mav.addObject("today",today);
-		mav.setViewName("index");
 		List<Plans> plan = plansservice.getOneSomeDayPlan(TODAY_NOW.toString());
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
 			today,
@@ -121,6 +141,11 @@ public class EntryController {
 			pageable);
 		int weekdays_sum = dateservice.getWeekDays(today);
 		double sum_time = dateservice.getSTETMinus(today, workersUserDetails.getUsername());
+
+		mav.setViewName("index");
+
+		mav.addObject("select_a",SELECT_TIME);
+		mav.addObject("today",today);
 		mav.addObject("weekdays_sum", weekdays_sum);
 		mav.addObject("sum_time", sum_time);
 		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
@@ -131,20 +156,27 @@ public class EntryController {
 		return mav;
 	}
 
-	/*勤務表レコード登録。エラーでなければ登録*/
+
+	/**
+	 * 勤務表レコード登録。エラーでなければ登録
+	 *
+	 * @param entryForm フォーム入力クラス
+	 * @param result バリデーションエラー検知
+	 * @param mav モデル＆ビュー
+	 * @param workersUserDetails 認証されたユーザー情報
+	 * @param pageable ページング情報保持変数
+	 * @return メイン画面情報に登録結果を付与させたモデル
+	 * @throws AJDException
+	 */
 	@PostMapping
 	@Transactional
-	public ModelAndView Entry(
+	public ModelAndView InsertWorkingTables(
 			@Validated EntryForm entryForm,
 			BindingResult result,
 			ModelAndView  mav,
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
 			@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable) throws AJDException
 	{
-		mav.addObject("select_a",SELECT_TIME);
-		mav.addObject("today", entryForm.getLDtoday());
-		mav.setViewName("index");
-		mav.addObject("Luser", workersUserDetails.getUser());
 		if(!result.hasErrors()){
 			String errormessage = dateValidation.ErrorSwitching(dateservice.SaveFlush(entryForm));
 			mav.addObject("errormsg", errormessage);
@@ -157,6 +189,12 @@ public class EntryController {
 
 		int weekdays_sum = dateservice.getWeekDays(entryForm.getLDtoday());
 		double sum_time = dateservice.getSTETMinus(entryForm.getLDtoday(), workersUserDetails.getUsername());
+
+		mav.setViewName("index");
+
+		mav.addObject("select_a",SELECT_TIME);
+		mav.addObject("today", entryForm.getLDtoday());
+		mav.addObject("Luser", workersUserDetails.getUser());
 		mav.addObject("sum_time", sum_time);
 		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
 		mav.addObject("plan_data", plan);
@@ -165,7 +203,15 @@ public class EntryController {
 		return mav;
 	}
 
-	/*勤務表csvダウンロードのマッピングを行う*/
+	/**
+	 * 勤務表csvダウンロードのマッピングを行う
+	 *
+	 * @param workersUserDetails 認証されたユーザー情報
+	 * @param filename 入力されたファイル名
+	 * @param today 開かれていた勤務表の日付
+	 * @return ファイル名が付いたcsvファイルをダウンロード
+	 * @throws IOException
+	 */
 	@PostMapping("/download")
 	@Transactional
 	public ResponseEntity<byte[]> download(

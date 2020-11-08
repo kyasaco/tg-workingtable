@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.app.Admin.PlansForm;
 import com.example.demo.doamin.model.Plans;
 import com.example.demo.doamin.repository.plans.PlansRepository;
+import com.example.demo.errors.DateValidation;
 
 import lombok.AllArgsConstructor;
 
@@ -22,6 +23,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PlansService {
 	private final PlansRepository repository;
+
+
+	public int deletePlan(LocalDate today) {
+		Date Dtoday = Date.valueOf(today);
+		if(repository.getOneToday(Dtoday).isPresent()) {
+			repository.deleteBythisToday(Dtoday);
+			return 0;
+		}
+		return 999;
+	}
 
 	/**
 	 * 予定表全件を取得する
@@ -65,14 +76,16 @@ public class PlansService {
 		if(repository.getOneToday(onToday).isEmpty()) {
 			//今日ないなら今日以上の昇順データから一件
 			planslist.add(plan);
-			planslist.add( repository.getByTosayGreaterAsc(onToday).get(0));
-
 		}
 		else {
 			//今日あるならいれる
 			planslist.add(repository.getOneToday(onToday).get());
-			planslist.add( repository.getByTosayGreaterAsc(onToday).get(0));
+		}
 
+		if(repository.getByTosayGreaterAsc(onToday).isEmpty()) {
+			planslist.add(plan);
+		}else {
+			planslist.add( repository.getByTosayGreaterAsc(onToday).get(0));
 		}
 		return planslist;
 	}

@@ -3,20 +3,33 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カレンダー</title>
+    <title>管理者用予定カレンダー</title>
     <!-- import ResetCss & CDN & Local　↓ -->
     <link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
     <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/theme.css}" rel="stylesheet" type="text/css">
 </head>
-<body>
-    <header>
+<body class=" custombody">
+<header>
+	<div class="debug1">
+		<h1>予定編集</h1>
+	</div>
+</header>
+<main>
+	<div class="debug2 main-datedelete">
+		<div class="main-text-custom">
 
-    </header>
-    <main>
-        <div id="caleandar"></div>
-        <a th:href="@{/Admin(today=${today})}">管理画面に戻る</a>
-    </main>
+				<form th:action="@{/Admin/Plans/CtrlDelete(today=${today})}" method="post" id="form_hidden">
+
+				</form>
+			<p class="requried_msg">日付をctrl+クリック素早く削除</p>
+			<a th:href="@{/Admin(today=${today})}" class="back_link_icon">管理画面に戻る</a>
+		</div>
+
+			<div id="caleandar" class="calendar_size"></div>
+	</div>
+</main>
     <input type="hidden" id="abcd" th:value="${abcd}">
 <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
 <!-- import js.file CDN↓ -->

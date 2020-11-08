@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>管理者用勤務表削除</title>
+	<title>管理者用ユーザー編集</title>
 	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
 	<!-- import js.file CDN↓ -->
 	<script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
@@ -13,42 +13,55 @@
 	<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<form th:action="@{/Admin/ConfUser}" method="post" th:object="${user_form}">
-	<table class="DateTable">
-	<caption><strong>利用者設定</strong></caption>
-		<thead class="DateTable-thead">
-			<th class="DateTable-Column">従業員ID</th>
-			<th class="DateTable-Column">苗字</th>
-			<th class="DateTable-Column">名前</th>
-			<th class="DateTable-Column">権限</th>
-			<th class="DateTable-Column">削除</th>
-		</thead>
-		<tbody class="DateTable-tbody">
-			<tr th:each="data:${user_data}">
-				<td  class="DateTable-Data">
-					<input type="text" name="userid" th:value="${data.userid}" th:id="input-text-user">
-				</td>
-				<td  class="DateTable-Data">
-					<input type="text" name="lastname" th:value="${data.lastname}" th:id="input-text-user">
-				</td>
-				<td  class="DateTable-Data">
-					<input type="text" name="firstname" th:value="${data.firstname}" id="input-text-user">
-				</td>
-				<td class="DateTable-Data">
-					<select name="rolename">
-						<option th:each="oioi:${SELECT_ROLE}" th:value="${oioi}" th:text="${oioi}" th:selected="${oioi == data.rolename}"></option>
-					</select>
-				</td>
-				<td class="DateTable-Data">
-					<input type="checkbox" name="dcheck" th:checked="${dcheck}" th:value="${data.userid}">
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<input type="submit" value="実行">
-</form>
-
-	<a th:href="@{/Admin(today=${today})}">管理画面へ戻る</a>
+<body class=" custombody">
+<header>
+	<div class="debug1">
+		<h1>ユーザー情報</h1>
+	</div>
+</header>
+<main>
+	<div class="debug2 user_conf_main">
+	<div class="main-text-custom">
+		<p class="requried_msg">登録されているユーザーの更新を行えます</p>
+		<div class="submit-inline">
+			<a th:href="@{/Admin(today=${today})}" class="back_link_icon">管理画面へ戻る</a>
+			<input type="submit" value="実行" form="form1">
+		</div>
+	</div>
+		<form th:action="@{/Admin/ConfUser}" method="post" th:object="${user_form}" id="form1">
+			<table class="DateTable">
+			<caption><strong>ユーザー設定</strong></caption>
+				<thead class="DateTable-thead">
+					<th class="DateTable-Column">従業員ID</th>
+					<th class="DateTable-Column">苗字</th>
+					<th class="DateTable-Column">名前</th>
+					<th class="DateTable-Column">権限</th>
+					<th class="DateTable-Column">削除</th>
+				</thead>
+				<tbody class="DateTable-tbody">
+					<tr th:each="data:${user_data}">
+						<td  class="DateTable-Data">
+							<input type="text" name="userid" th:value="${data.userid}" th:id="input-text-user">
+						</td>
+						<td  class="DateTable-Data">
+							<input type="text" name="lastname" th:value="${data.lastname}" th:id="input-text-user">
+						</td>
+						<td  class="DateTable-Data">
+							<input type="text" name="firstname" th:value="${data.firstname}" id="input-text-user">
+						</td>
+						<td class="DateTable-Data">
+							<select name="rolename">
+								<option th:each="oioi:${SELECT_ROLE}" th:value="${oioi}" th:text="${oioi}" th:selected="${oioi == data.rolename}"></option>
+							</select>
+						</td>
+						<td class="DateTable-Data">
+							<input type="checkbox" name="dcheck" th:checked="${dcheck}" th:value="${data.userid}">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+</main>
 </body>
 </html>

@@ -15,7 +15,7 @@
 </head>
 <body>
 	<div class="form_custom">
-		<h2>登録フォーム</h2>
+		<h2>新規登録</h2>
 		<form th:action="@{/insert}" method="post" th:object="${InsertForm}">
 			<table>
 				<tr>
@@ -84,7 +84,7 @@
 					</td>
 				</tr>
 				<tr id="form_go">
-					<td><a href="login/loginForm">ログイン画面へ戻る</a></td>
+					<td><a href="login/loginForm" class="back_link_icon">ログイン画面へ戻る</a></td>
 				</tr>
 			</table>
 		</form>

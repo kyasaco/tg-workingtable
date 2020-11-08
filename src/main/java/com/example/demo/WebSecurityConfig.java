@@ -49,7 +49,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception{
 		//authorizeRequests:何のリクエストを許可するか
 		http.authorizeRequests()
-				.mvcMatchers("/js/**","/css/**","/insertForm","/insert","/ErrorPage").permitAll()
+				.mvcMatchers("/js/**","/css/**","/images/**","/insertForm","/insert","/ErrorPage").permitAll()
 				.and()
 			.authorizeRequests()
 				.mvcMatchers("/Admin/**").access("hasRole('ADMIN') and isFullyAuthenticated()")

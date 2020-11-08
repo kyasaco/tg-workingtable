@@ -28,4 +28,6 @@ public interface PlansRepository extends JpaRepository<Plans, Integer> {
 	@Query(value="SELECT today,holiday FROM Plans WHERE today LIKE ?1 + \'-\' + ?2 + \'-%\'",nativeQuery = true)
 	List<Object[]> getHolidayOneMonth(String Year,String Month);
 
+
+
 }

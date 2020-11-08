@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>登録</title>
+<title>管理者用予定登録</title>
 <!-- import ResetCss & CDN & Local　↓ -->
 <link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
 <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}"rel="stylesheet" type="text/css">
@@ -57,7 +57,7 @@
 					</td>
 				</tr>
 				<tr id="form_go">
-					<td><a th:href="@{/Admin/Plans(today=${#dates.format(#dates.createNow(),'yyyy-MM-dd')})}" id="opener_a">カレンダーへ戻る</a></td>
+					<td><a class="back_link_icon" th:href="@{/Admin/Plans(today=${#dates.format(#dates.createNow(),'yyyy-MM-dd')})}" id="opener_a">カレンダーへ戻る</a></td>
 				</tr>
 			</table>
 		</form>

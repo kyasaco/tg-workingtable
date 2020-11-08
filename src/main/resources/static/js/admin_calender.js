@@ -305,11 +305,12 @@ function createCalendar(calendar, element, adjuster){
 		mainSection.appendChild(days);
 	}
 	if(calendar.Options.Color){
-		mainSection.innerHTML += '<style>.cld-main{color:' + calendar.Options.Color + ';}</style>';
+		mainSection.innerHTML += '<style>.cld-main{color:' + calendar.Options.Color + ';background-color:white;border:5em solid #0b41a0;}</style>';
 	}
 	if(calendar.Options.LinkColor){
 		mainSection.innerHTML += '<style>.cld-title a{color:' + calendar.Options.LinkColor + ';}</style>';
 	}
+	mainSection.innerHTML+= '<style>.cld-main{background-color:white;border:0.5em solid #0b41a0;}</style>';
 	element.appendChild(mainSection);
 
 	if(calendar.Options.NavShow && calendar.Options.NavVertical){
@@ -323,7 +324,7 @@ function createCalendar(calendar, element, adjuster){
 
 //自作：クリックした年月日をアラート表示 ver1.0.0
 //選択月以外をクリックした場合は年月日がでないように更新 ver2.0
-	$('.cld-number').click(function(){
+	$('.cld-number').click(function(event){
         var url = "";
 		var parent2 =$(this).parent().attr('class');
         var Year = calendar.Selected.Year;
@@ -356,8 +357,23 @@ function createCalendar(calendar, element, adjuster){
 			var today = Year+'-'+Month+'-'+Day;
 
 		}
-         url = '/Admin/Plans/Insert?today=' + today;
-         window.open(url,null,'width=500,toolbar=yes,menubar=yes,scrollbars=yes');
+
+		if(event.ctrlKey){
+			var form = document.getElementById("form_hidden");
+				// パラメタの設定
+			 var input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', 'plan_name');
+			input.setAttribute('value', today);
+			form.appendChild(input);
+			 // submit
+			 form.submit();
+		}else{
+			url = '/Admin/Plans/Insert?today=' + today;
+			 window.open(url,null,'width=500,toolbar=yes,menubar=yes,scrollbars=yes');
+		}
+
+
 		//デバッグ用
 		//alert(calendar.Selected.Year)
 		//alert(calendar.Selected.Month + 1)

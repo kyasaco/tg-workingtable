@@ -35,6 +35,7 @@ import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.plans.PlansService;
 import com.example.demo.doamin.service.user.UserService;
+import com.example.demo.errors.DateValidation;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import lombok.AllArgsConstructor;
@@ -46,6 +47,7 @@ public class AdminController {
 	private final DateService dateservice;
 	private final UserService userservice ;
 	private final PlansService plansrservice;
+	private final DateValidation dateValidation;
 
 	final List<RoleName> SELECT_ROLE = new ArrayList<RoleName>() {
 		{
@@ -177,12 +179,24 @@ public class AdminController {
 			@RequestParam(name="today",required = false)
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
 			ModelAndView mav) {
+
 		mav.addObject("today", today);
 		mav.setViewName("Admin/AdminInsertPlans");
 		if(!bindingResult.hasErrors()) {
 			plansrservice.SaveAndFlushPlans(plansform);
 		}
 		return mav;
+	}
+
+	@PostMapping("/Plans/CtrlDelete")
+	@Transactional
+	public ModelAndView postPlansCtrlDelete(
+			@RequestParam(name="plan_name",required = false)
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate today,
+			ModelAndView mav) {
+		String error_msg = dateValidation.ErrorSwitching(plansrservice.deletePlan(today));
+
+		return new ModelAndView("redirect:/Admin/Plans?today="+today.toString()+"");
 	}
 
 

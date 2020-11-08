@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>ログイン</title>
+	<title>管理者設定画面</title>
 	<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
 	<!-- import ResetCss & CDN & Local　↓ -->
 	<link th:href="@{/css/resetcss.css}" rel="stylesheet" type="text/css">
@@ -11,14 +11,14 @@
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
 <body th:with="user=${#authentication.principal.user}">
-<div sec:authorize="${hasRole('ADMIN')}" th:with="thtoday = ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+<div sec:authorize="${hasRole('ADMIN')}" th:with="thtoday = ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}" class="main-text-custom">
 
 	<button th:onclick="'location.href=\''+@{/Admin/DeleteDate} + '\''" name="date" >勤務表管理画面へ</button>
     <button th:onclick="'location.href=\''+@{/Admin/ConfUser} + '\''" name="user" >利用者管理画面へ</button>
     <button th:onclick="'location.href=\''+@{/Admin/Plans(today=${thtoday} )} + '\''" name="plans" >予定入力画面へ</button>
+	<a href="/" class="back_link_icon">勤務表入力画面に戻る</a>
 
 </div>
-<a href="/">勤務表入力画面に戻る</a>
 <!-- import js.file CDN↓ -->
 <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>
 <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.min.js}"></script>
