@@ -20,6 +20,13 @@ public interface UserRepository extends JpaRepository<User, String>{
 	List<User> findByUserid(String num);
 	List<User> findByOrderByUseridAsc();
 
+	/**
+	 * @param userid
+	 * @param firstname
+	 * @param lastname
+	 * @param rolename
+	 * @param ex_userid
+	 */
 	@Query(value="UPDATE usrs3"
 			+ "SET userid = ?1,firstname =?2,lastname = ?3,rolename = ?4"
 			+ "WHERE userid =  ?5",nativeQuery = true)
@@ -37,4 +44,7 @@ public interface UserRepository extends JpaRepository<User, String>{
 
 	@Query(value="SELECT DISTINCT rolename FROM usrs3",nativeQuery = true)
 	List<RoleName> findByRolenamesDistinct();
+
+	@Query(value="SELECT DISTINCT userid FROM usrs3",nativeQuery = true)
+	List<String> findByUserIdDistinct();
 }

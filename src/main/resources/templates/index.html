@@ -33,7 +33,7 @@
 	<div class="debug2">
 	<!-- 予定一覧 -->
 	<div class="main_plans_list">
-		<h3>予定一覧</h3>
+		<h3 class="h3-titles">予定一覧</h3>
 		<div class="todays_plan">
 			<!-- 今日の予定一覧 -->
 			<ul class="todays_plan_ul" >
@@ -63,13 +63,13 @@
 		</div>
 	</div>
 		<div class="main_datatable">
-			<h3>勤務表登録</h3>
+			<h3 class="h3-titles">勤務表登録</h3>
 			<div class="main-text-custom">
 				<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
 					<!-- 実行時の日付 -->
 					<strong>日付：</strong><label th:text="${#temporals.format(today,'yyyy年MM月dd日(E)')}"> </label>
 					<input type="hidden" form="form1" th:value="${today}" name="today">
-					<a th:href="@{/calendar(todayCarendar=${today})}">カレンダー</a>
+					<a th:href="@{/calendar(todayCarendar=${today})}" class="index-calendar">カレンダー</a>
 					<div class="day-arrow">
 						<ul>
 							<li class="page_left_arrow">
@@ -175,8 +175,8 @@
 		</div>
 		<div  class="main-text-custom-right " >
 			<div class="download-form">
-				<p class="download_topic main-text-custom">
-					・勤務表をcsv形式でダウンロードできます<br>
+				<p class="download_topic main-text-custom p-titles">
+					勤務表をcsv形式でダウンロードできます<br>
 					未入力の場合は既定のファイル名になります
 				</p>
 				<form th:action="@{/download}" method="post" >

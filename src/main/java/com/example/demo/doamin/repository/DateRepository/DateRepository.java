@@ -63,4 +63,23 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	List<Object[]> findQueryBySTET(String Year,String Month,String id);
 
 
+	/**
+	 * 従業員IDが存在する場合の日付検索
+	 * @param VYMD 正規表現にて作成された日付フォーマットの文字列
+	 * @param id
+	 * @return
+	 */
+	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 AND workers_id = ?2 ",nativeQuery = true)
+	List<DateEntity> findQueryByYMDWithUID(String VYMD,String id);
+
+
+	/**
+	 * 従業員IDが存在しない場合の日付検索
+	 * @param VYMD 正規表現にて作成された日付フォーマットの文字列
+	 * @return
+	 */
+	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 ",nativeQuery = true)
+	List<DateEntity> findQueryByYMD(String VYMD);
+
+
 }

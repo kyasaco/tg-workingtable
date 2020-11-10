@@ -10,22 +10,32 @@ body{
 .custombody{
 	background-color: #0b41a0;
 }
+.form-explanation{
+	margin-bottom:0.5em;
+}
 main
 {
-
 	height: auto;
-/*	background-color: rgba(255,0,0,0.3);*/
 	text-align: center;
     padding: 15px;
     background-size: 20px 20px;
 }
-
+.admin-list-link{
+	text-align: right;
+}
+ol{
+	list-style-type: decimal;
+}
 header{
 	padding: 15px;
 }
 footer{
 	padding: 15px;
 }
+.margin-left-on{
+	margin-left: auto;
+}
+
 a{
 	font-size:75%;
 	position: relative;
@@ -45,6 +55,12 @@ h2{
 h3{
 	margin-bottom: 1em;
 	}
+.h3-titles:before,.h4-titles:before,.p-titles:before{
+	content: "★";
+}
+h4 {
+    margin: 0.5em 0;
+}
 input[type="text"],input[type="password"]{
 	width:100%;
 }
@@ -69,14 +85,17 @@ a:hover::after{
 /**diplay:inline-blockは親要素に対して指定できる**/
 .main-text-custom
 {
-	display:inline-block;
-	text-align: left;
-	height: fit-content;
-	padding: 0.2em 0.5em;
+	width: fit-content;
+    display: flex;
+    height: fit-content;
+	padding: 0.5em 1em;
     margin-bottom: 1em;
     background: #d6ebff;
     box-shadow: 0px 0px 3px 4px #d6ebff;
     border: dashed 2px #0b41a0;
+    text-align: left;
+/*    align-items: flex-end;*/
+    flex-direction: column;
 }
 .back_link_icon{
     padding-left: 1.5em;
@@ -88,8 +107,8 @@ a:hover::after{
 {
 	display: flex;
 	position: absolute;
-/*top: 25em;*/
-bottom:4em;
+top: 22em;
+/*bottom:4em;*/
 }
 .download-form {
     display: flex;
@@ -101,6 +120,9 @@ bottom:4em;
 }
 .main_datatable{
 	width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .nav-baner{
 	display:flex;
@@ -116,7 +138,7 @@ bottom:4em;
 }
 .debug1{
     height: auto;
-	background-color: #f6ffe3;
+	background-color: #f8f9fc;
 
 }
 
@@ -125,13 +147,13 @@ bottom:4em;
 	display: flex;
     justify-content: flex-start;
     flex-wrap:wrap;
-    background-color: #f6ffe3;
+    background-color: #f8f9fc;
 	min-height: 20em;
 }
 
 .debug3{
 	height: 5em;
-    background-color: #f6ffe3;
+    background-color: #f8f9fc;
 }
 /**********FormCSS**********/
 .worktime-block
@@ -198,7 +220,6 @@ input[type="submit"]:active{
 	border:4px solid;
 	background-color: white;
 }
-
 .DateTable-Column
 {
 	background-color: #CCFFFF;
@@ -221,9 +242,13 @@ input[type="submit"]:active{
 }
 .requried_msg{
 	font-size:70%;
+	line-height: 1.5;
 }
 #form_go{
 	text-align: end;
+}
+.index-calendar:before{
+	content:url(../images/calendar_icon.png);
 }
 hr{
 	height:0.5em;
@@ -254,6 +279,7 @@ hr{
     font-size: 90%;
     text-indent: -1em;
     padding-left: 1em;
+        display: inline-block;
 }
 /*nav*/
 .nav-welcome{
@@ -383,11 +409,30 @@ input#input-text-user {
 	justify-content: space-evenly;
 }
 
-/****AdminDateDelete****/
 .user_conf_main {
     justify-content: space-between;
 }
 .submit-inline{
     text-align: end;
     margin-top: 0.5em;
+}
+/****calendar.html****/
+#caleandar{
+	background-color: white;
+}
+
+/****管理者メニュー*****/
+.admin-body{
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+}
+.admin-list>button {
+    width: 100%;
+}
+.admin-list {
+    margin-bottom: 1em;
+}
+a.color-change:visited{
+	color:white;
 }

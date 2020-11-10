@@ -13,7 +13,7 @@
 	<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
-<body class=" custombody">
+<body class=" custombody" th:with="th_today = ${#calendars.createNow()}">
 <header>
 	<div class="debug1">
 		<h1>勤務表削除</h1>
@@ -22,15 +22,54 @@
 <main>
 	<div class="debug2">
 		<div class="main-text-custom">
-			<form th:action="@{/Admin/DeleteDate/search}" method="post" >
+			<dl class="form-explanation">
+				<dt><h4 class="h4-titles">勤務表削除</h4></dt>
+				<dd>
+					<p class="requried_msg">従業員IDと日付で勤務表を検索し、削除ボタンで削除実行できます</p>
+					<p class="requried_msg">未入力(-ハイフン)の場合は全てが対象になります</p>
+				</dd>
+			</dl>
+
+			<form th:action="@{/Admin/DeleteDate/search}" method="post" th:object="${AdminDeleteForm}">
 			<table>
-				<tr><td>従業員ID：</td><td><input type="text" name="userid" ></td></tr>
-				<tr><td>日付：</td><td><input type="date" name="today"></td></tr>
-				<tr><td></td><td><input type="submit"value="検索"></td></tr>
+				<tr><td>従業員ID：</td><td><input type="text" name="userid" th:value="*{userid}"></td></tr>
+				<tr>
+					<td>日付：</td>
+					<td>
+						<select name="year" id="year">
+							<option value="">-</option>
+							<option th:each="year:${SELECT_YEAR}" th:value="${year.value}"
+							 th:text="${year.key}" th:selected="${year.value} == *{year}"></option>
+						</select>
+						<label for="year"><span class="requried_msg">年</span></label>
+						<select name="month" id="month">
+							<option value="">-</option>
+							<option th:each="month:${SELECT_MONTH}" th:value="${month.value}"
+							 th:text="${month.key}"  th:selected="${month.value} == *{month}"></option>
+						</select>
+						<label for="month"><span class="requried_msg">月</span></label>
+						<select name="day" id="day">
+							<option value="">-</option>
+							<option th:each="day:${SELECT_DAYS}" th:value="${day.value}"
+							 th:text="${day.key}" th:selected="${day.value} == *{day}"></option>
+						</select>
+						<label for="day"><span class="requried_msg">日</span></label>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="margin-left-on">
+						<input type="submit"value="検索" >
+<!--
+						<span th:if="${#fields.hasErrors(AdminDeleteForm.class)}" th:errors="*{AdminDeleteForm.class}" class="error_msg"></span>
+-->
+						<span th:if="${#fields.hasErrors('global')}" th:errors="*{global}" class="error_msg"></span>
+						<span th:text="${error_message}" class="error_msg"></span>
+					</td>
+				</tr>
 			</table>
 			</form>
-			<a th:href="@{/Admin(today=${today})}" class="back_link_icon">管理画面へ戻る</a>
-			<span th:text="${NullError}"></span>
+			<a th:href="@{/Admin(today=${today})}" class="back_link_icon margin-left-on">管理画面へ戻る</a>
 		</div>
 		<div style="margin-left: auto;">
 			<table class="DateTable">
@@ -49,9 +88,9 @@
 						<td th:text="${#dates.format(data.endTime,'HH時mm分')}" class="DateTable-Data"></td>
 						<td>
 							<form th:action="@{/Admin/DeleteDate/search}" method="post">
-		                        <input type="hidden"  name="d_delete" th:value="${data.id}">
-		                        <input type="hidden"  name="userid" th:value="${userid}">
-		                        <input type="hidden"  name="today" th:value="${today}">
+								<input type="hidden"  name="d_delete" th:value="${data.id}">
+								<input type="hidden"  name="userid" th:value="${userid}">
+								<input type="hidden"  name="today" th:value="${today}">
 								<input type="submit"  value="削除">
 							</form>
 						</td>

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.app.Admin.AdminDeleteForm;
 import com.example.demo.app.entry.EntryForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
@@ -35,6 +36,7 @@ import lombok.AllArgsConstructor;
 public class DateService {
 	private final DateRepository repository;
 	private final PlansService plansservice;
+
 
 	/**
 	 * useridと一致する一件の取得
@@ -91,15 +93,25 @@ public class DateService {
 		String year = String.valueOf(today.getYear());
 		return repository.findQueryByMonthForPage(year,month, bid, pageable);
 	}
-	//idで一件削除
+
 	/**
+	 * idで一件削除
 	 * @param id
 	 */
-	public void DeleteOne(Integer id) {
-		repository.deleteById(id);
+	public int DeleteOne(Integer id) {
+		if(id == null) {
+			return 999;
+		}
+		if(findOne(id).isPresent()) {
+			repository.deleteById(id);
+			return 0;
+		}else {
+			return 4;
+		}
 	}
-	//today昇順で全件取得
+
 	/**
+	 * 従業員ID昇順で全件取得
 	 * @return
 	 */
 	public List<DateEntity> findAllAsc()
@@ -177,21 +189,16 @@ public class DateService {
 	}
 
 	//勤務表の検索処理：入力された値により検索処理を分岐
-	public List<DateEntity> VfindUIDandTDY(String userid,String today){
-		if((userid == "" && today == "")||(userid == null && today ==null)) {
-			return findAllAsc();
+	public List<DateEntity> VfindUIDandTDY(AdminDeleteForm adf){
+		String today = String.format("%04d-%02d-%02d",adf.getYear(),adf.getMonth(),adf.getDay());
+		String re_today = today.replaceAll("[a-zA-Z]+", "%");
+
+		if(adf.getUserid() == null) {
+			return repository.findQueryByYMD(re_today);
+		}else {
+			return repository.findQueryByYMDWithUID(re_today, adf.getUserid().toString());
 		}
 
-		if(userid == "" && today != "") {
-			Date dtoday = Date.valueOf(today);
-			return findByToday(dtoday);
-		}
-		else if (userid != "" && today == "") {
-			return findByWorkersId(userid);
-		}
-		else {
-			return findOneTandWID(userid, Date.valueOf(today));
-		}
 	}
 
 	/**

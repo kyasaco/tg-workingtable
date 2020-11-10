@@ -19,6 +19,10 @@ public interface PlansRepository extends JpaRepository<Plans, Integer> {
 	@Modifying
 	void deleteBythisToday(Date today);
 
+	@Query(value="DELETE FROM Plans WHERE today LIKE ?1",nativeQuery = true)
+	@Modifying
+	void deleteBythisVYMD(String YMD);
+
 	@Query(value="SELECT *  FROM Plans WHERE today = ?1",nativeQuery = true)
 	Optional<Plans> getOneToday(Date today);
 

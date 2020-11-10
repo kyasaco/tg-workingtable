@@ -22,11 +22,15 @@
 <main>
 	<div class="debug2 user_conf_main">
 	<div class="main-text-custom">
-		<p class="requried_msg">登録されているユーザーの更新を行えます</p>
-		<div class="submit-inline">
-			<a th:href="@{/Admin(today=${today})}" class="back_link_icon">管理画面へ戻る</a>
-			<input type="submit" value="実行" form="form1">
-		</div>
+		<dl class="form-explanation">
+			<dt><h4 class="h4-titles">ユーザー情報更新</h4></dt>
+			<dd>
+				<p class="requried_msg">入力欄を変更し実行ボタンを押すことで<br>登録されているユーザーの更新を行えます</p>
+				<p class="requried_msg">変更内容が更新されるのは<strong>次回ログイン時</strong>からです</p>
+			</dd>
+		</dl>
+		<input type="submit" value="実行" form="form1" class="margin-left-on">
+		<a th:href="@{/Admin(today=${today})}" class="back_link_icon margin-left-on">管理画面へ戻る</a>
 	</div>
 		<form th:action="@{/Admin/ConfUser}" method="post" th:object="${user_form}" id="form1">
 			<table class="DateTable">

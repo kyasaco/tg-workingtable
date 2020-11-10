@@ -19,18 +19,56 @@
 <main>
 	<div class="debug2 main-datedelete">
 		<div class="main-text-custom">
+			<form th:action="@{/Admin/Plans/CtrlDelete(today=${today})}" method="post" id="form_hidden"></form>
+			<dl class="form-explanation">
+				<dt><h4 class="h4-titles">予定登録＆更新</h4></dt>
+					<dd>
+							<p class="requried_msg">日付をクリックで予定入力ポップアップウィンドウが出ます</p>
+							<p class="requried_msg">休日・祝日は色が変わります(日曜・祝日・指定休日=赤、土曜＝青)</p>
+					</dd>
+				<dt><h4 class="h4-titles">予定削除</h4></dt>
+					<dd>
+						<p class="requried_msg">未入力(-ハイフン)の場合は全てが対象になります</p>
+						<p class="requried_msg">日付を直接ctrl+クリックでも削除できます</p>
+					</dd>
+			</dl>
+			<form th:action="@{/Admin/Plans(today=${today})}" method = "post" id = "form_plan" th:object="${PlansDeleteForm}">
+				<table>
+					<tbody>
+						<tr>
+							<td>日付：</td>
+							<td>
+								<select name="year">
+									<option value="">-</option>
+									<option th:each="year:${SELECT_YEAR}" th:value="${year.value}"
+									 th:text="${year.key}" th:selected="${year.value} == *{year}"></option>
+								</select>
+								<label ><span class="requried_msg">年</span></label>
+								<select name="month">
+									<option value="">-</option>
+									<option th:each="month:${SELECT_MONTH}" th:value="${month.value}"
+									 th:text="${month.key}" th:selected="${month.value} == *{month}"></option>
+								</select>
+								<label><span class="requried_msg">月</span></label>
+								<select name="day">
+									<option value="">-</option>
+									<option th:each="day:${SELECT_DAYS}" th:value="${day.value}"
+									 th:text="${day.key}" th:selected="${day.value} == *{day}"></option>
+								</select>
+								<label><span class="requried_msg">日</span></label>
+								<input type="submit" form="form_plan" name="form_plan" value="削除">
 
-				<form th:action="@{/Admin/Plans/CtrlDelete(today=${today})}" method="post" id="form_hidden">
-
-				</form>
-			<p class="requried_msg">日付をctrl+クリック素早く削除</p>
-			<a th:href="@{/Admin(today=${today})}" class="back_link_icon">管理画面に戻る</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<a th:href="@{/Admin(today=${today})}" class="back_link_icon margin-left-on">管理画面に戻る</a>
 		</div>
 
 			<div id="caleandar" class="calendar_size"></div>
 	</div>
 </main>
-    <input type="hidden" id="abcd" th:value="${abcd}">
 <script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
 <!-- import js.file CDN↓ -->
 <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/js/drawer.min.js}"></script>

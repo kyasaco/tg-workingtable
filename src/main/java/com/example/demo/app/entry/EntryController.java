@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.MyAppProperties;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.model.Plans;
@@ -59,29 +60,10 @@ public class EntryController {
 	private final DateValidation dateValidation;
 	private final PlansService plansservice;
 	private final DownloadHelper downloadHelper;
-
-	/**
-	 * 現在時刻の定数
-	 */
-	private final LocalDate TODAY_NOW = LocalDate.now();
+	private final MyAppProperties myAppProperties;
 
 
-	/**
-	 * 開始時間と終了時間のSELECTタグ用(LinkedHashMapは挿入された順番を保持する)定数
-	 */
-	final Map<String,String> SELECT_TIME = Collections.unmodifiableMap(new LinkedHashMap<String, String>(){
-		{
-			for(Integer i = 0; i < 24; i++) {
-				if(i>9){
-					put(i.toString()+":00", i.toString()+":00");
-					put(i.toString()+":30", i.toString()+":30");
-				}else{
-					put("0"+i.toString()+":00", "0"+i.toString()+":00");
-					put("0"+i.toString()+":30", "0"+i.toString()+":30");
-				}
-			}
-		}
-	});
+
 
 	/*データをCSV化*/
 	public String getCsvText(WorkersUserDetails workersUserDetails,LocalDate today) throws JsonProcessingException{
@@ -134,7 +116,7 @@ public class EntryController {
 			today=LocalDate.now();
 		}
 
-		List<Plans> plan = plansservice.getOneSomeDayPlan(TODAY_NOW.toString());
+		List<Plans> plan = plansservice.getOneSomeDayPlan(myAppProperties.getTODAY_NOW().toString());
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
 			today,
 			workersUserDetails.getUsername(),
@@ -144,11 +126,11 @@ public class EntryController {
 
 		mav.setViewName("index");
 
-		mav.addObject("select_a",SELECT_TIME);
+		mav.addObject("select_a",myAppProperties.getSELECT_TIME());
 		mav.addObject("today",today);
 		mav.addObject("weekdays_sum", weekdays_sum);
 		mav.addObject("sum_time", sum_time);
-		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
+		mav.addObject("TODAY_NOW",Date.valueOf(myAppProperties.getTODAY_NOW()));
 		mav.addObject("plan_data", plan);
 		mav.addObject("DateTableData", datedata.getContent());
 		mav.addObject("Luser", workersUserDetails.getUser());
@@ -175,13 +157,13 @@ public class EntryController {
 			BindingResult result,
 			ModelAndView  mav,
 			@AuthenticationPrincipal WorkersUserDetails workersUserDetails,
-			@PageableDefault(page = 0,size = 25,sort = {"today"},direction =Direction.ASC)Pageable pageable) throws AJDException
+			@PageableDefault(page = 0,size = 31,sort = {"today"},direction =Direction.ASC)Pageable pageable) throws AJDException
 	{
 		if(!result.hasErrors()){
 			String errormessage = dateValidation.ErrorSwitching(dateservice.SaveFlush(entryForm));
 			mav.addObject("errormsg", errormessage);
 		}
-		List<Plans> plan = plansservice.getOneSomeDayPlan(TODAY_NOW.toString());
+		List<Plans> plan = plansservice.getOneSomeDayPlan(myAppProperties.getTODAY_NOW().toString());
 		Page<DateEntity> datedata = dateservice.findQueryMonthForPage(
 			entryForm.getLDtoday(),
 			workersUserDetails.getUsername(),
@@ -192,11 +174,11 @@ public class EntryController {
 
 		mav.setViewName("index");
 
-		mav.addObject("select_a",SELECT_TIME);
+		mav.addObject("select_a",myAppProperties.getSELECT_TIME());
 		mav.addObject("today", entryForm.getLDtoday());
 		mav.addObject("Luser", workersUserDetails.getUser());
 		mav.addObject("sum_time", sum_time);
-		mav.addObject("TODAY_NOW",Date.valueOf(TODAY_NOW));
+		mav.addObject("TODAY_NOW",Date.valueOf(myAppProperties.getTODAY_NOW()));
 		mav.addObject("plan_data", plan);
 		mav.addObject("weekdays_sum", weekdays_sum);
 		mav.addObject("DateTableData", datedata.getContent());

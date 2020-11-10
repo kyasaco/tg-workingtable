@@ -28,6 +28,14 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	/**
+	 * 現在の従業員IDを重複なしで取得
+	 * @return
+	 */
+	public List<String> getNowUserIds(){
+		return repository.findByUserIdDistinct();
+	}
+
+	/**
 	 * @param ucf 従業員ID、苗字、名前、ロールを持ったクラス
 	 * @param dcheck 削除する従業員IDが入ったリスト
 	 * @return

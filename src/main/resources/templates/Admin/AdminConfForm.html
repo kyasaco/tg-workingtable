@@ -10,13 +10,29 @@
 	<link th:href="@{/css/main.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.2/css/drawer.css}" rel="stylesheet" type="text/css">
 </head>
-<body th:with="user=${#authentication.principal.user}">
-<div sec:authorize="${hasRole('ADMIN')}" th:with="thtoday = ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}" class="main-text-custom">
+<body th:with="user=${#authentication.principal.user}" >
+<div class="admin-body" sec:authorize="${hasRole('ADMIN')}" >
+<h3 class="h3-titles">管理者メニュー</h3>
+<div th:with="thtoday = ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}" class="main-text-custom">
 
-	<button th:onclick="'location.href=\''+@{/Admin/DeleteDate} + '\''" name="date" >勤務表管理画面へ</button>
-    <button th:onclick="'location.href=\''+@{/Admin/ConfUser} + '\''" name="user" >利用者管理画面へ</button>
-    <button th:onclick="'location.href=\''+@{/Admin/Plans(today=${thtoday} )} + '\''" name="plans" >予定入力画面へ</button>
-	<a href="/" class="back_link_icon">勤務表入力画面に戻る</a>
+	<ul>
+		<li class="admin-list">
+			<p class="requried_msg p-titles">ユーザーの勤務表を削除するなら</p>
+			<button th:onclick="'location.href=\''+@{/Admin/DeleteDate} + '\''" name="date" >勤務表管理画面へ</button>
+		</li>
+		<li class="admin-list">
+			<p class="requried_msg p-titles" >ユーザーの情報を変更するなら</p>
+    		<button th:onclick="'location.href=\''+@{/Admin/ConfUser} + '\''" name="user" >利用者管理画面へ</button>
+		</li>
+		<li class="admin-list">
+			<p class="requried_msg p-titles">予定を入力するなら</p>
+    		<button th:onclick="'location.href=\''+@{/Admin/Plans(today=${thtoday} )} + '\''" name="plans" >予定入力画面へ</button>
+		</li>
+		<li class="admin-list-link"><a href="/" class="back_link_icon">勤務表入力画面に戻る</a></li>
+	</ul>
+
+
+</div>
 
 </div>
 <!-- import js.file CDN↓ -->

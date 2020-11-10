@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.app.Admin.PlansDeleteForm;
 import com.example.demo.app.Admin.PlansForm;
 import com.example.demo.doamin.model.Plans;
 import com.example.demo.doamin.repository.plans.PlansRepository;
@@ -32,6 +33,12 @@ public class PlansService {
 			return 0;
 		}
 		return 999;
+	}
+
+	public void deletePlansYMD(PlansDeleteForm pdf) {
+		String today = String.format("%04d-%02d-%02d",pdf.getYear(),pdf.getMonth(),pdf.getDay());
+		String re_today = today.replaceAll("[a-zA-Z]+", "%");
+		repository.deleteBythisVYMD(re_today);
 	}
 
 	/**
