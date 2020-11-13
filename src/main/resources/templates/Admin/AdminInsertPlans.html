@@ -24,7 +24,7 @@
                 </tr>
                 <tr>
                     <td id="pwd_error">
-                        <label id="pwd_lavel" for="title">タイトル<span class="requried_msg">(必須)</span>:</label>
+                        <label id="pwd_lavel" for="title">タイトル<span class="requried_msg text-indent-block">(必須)</span>:</label>
 						<div class="smart_errors"><span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error_msg"></span></div>
                     </td>
                 </tr>
@@ -33,7 +33,7 @@
                 </tr>
 				<tr>
 					<td id="pwd_error">
-						<label id="pwd_lavel" for="plan">予定<span class="requried_msg">(任意)</span>:</label>
+						<label id="pwd_lavel" for="plan">予定<span class="requried_msg text-indent-block">(任意)</span>:</label>
 						<div class="smart_errors"><span th:if="${#fields.hasErrors('plans')}" th:errors="*{plans}" class="error_msg"></span></div>
 					</td>
 				</tr>
@@ -42,7 +42,7 @@
 				</tr>
                 <tr>
                     <td>
-                           <label for="off_day">休日:</label><input type="checkbox" id="off_day" name="holiday" value="TRUE" th:checked="*{holiday == true}">
+                           <label for="off_day">休日にする:</label><input type="checkbox" id="off_day" name="holiday" value="TRUE" th:checked="*{holiday == true}">
 						<div class="smart_errors"><span th:if="${#fields.hasErrors('holiday')}" th:errors="*{holiday}" class="error_msg"></span></div>
                     </td>
             </tr>

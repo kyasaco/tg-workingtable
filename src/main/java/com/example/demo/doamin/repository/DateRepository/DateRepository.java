@@ -81,5 +81,10 @@ public interface DateRepository extends JpaRepository<DateEntity,Integer>{
 	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 ",nativeQuery = true)
 	List<DateEntity> findQueryByYMD(String VYMD);
 
+	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 ",nativeQuery = true)
+	Page<DateEntity> PagefindQueryByYMD(String VYMD,Pageable pageable);
+
+	@Query(value="SELECT * FROM Date7 WHERE today LIKE ?1 AND workers_id = ?2 ",nativeQuery = true)
+	Page<DateEntity> PagefindQueryByYMDWithUID(String VYMD,String id,Pageable pageable);
 
 }

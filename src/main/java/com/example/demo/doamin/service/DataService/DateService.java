@@ -16,8 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.app.Admin.AdminDeleteForm;
-import com.example.demo.app.entry.EntryForm;
+import com.example.demo.app.Admin.forms.AdminDeleteForm;
+import com.example.demo.app.entry.forms.EntryForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.repository.DateRepository.DateRepository;
@@ -37,6 +37,18 @@ public class DateService {
 	private final DateRepository repository;
 	private final PlansService plansservice;
 
+	//勤務表の検索処理：入力された値により検索処理を分岐
+	public Page<DateEntity> getPageVYMD(AdminDeleteForm adf,Pageable pageable){
+		String today = String.format("%04d-%02d-%02d",adf.getYear(),adf.getMonth(),adf.getDay());
+		String re_today = today.replaceAll("[a-zA-Z]+", "%");
+
+		if(adf.getUserid() == "" || adf.getUserid() == null) {
+			return repository.PagefindQueryByYMD(re_today, pageable);
+		}else {
+			return repository.PagefindQueryByYMDWithUID(re_today, adf.getUserid(),pageable);
+		}
+
+	}
 
 	/**
 	 * useridと一致する一件の取得
@@ -217,15 +229,15 @@ public class DateService {
 		for(Object[] stet : stet_list) {
 			LocalTime st = ((Time) stet[0]).toLocalTime();
 			LocalTime et = ((Time) stet[1]).toLocalTime();
-			sum_time += (double)(et.getHour() - st.getHour());
-			int stMin = st.getMinute();
-			int etMin = et.getMinute();
-			if(etMin+ stMin == 60) {
-				sum_time += 1.0;
-			}else if(etMin != stMin) {
-				sum_time += 0.5;
-			}
+			int stMin = (st.getHour() * 60) + st.getMinute();
+			int etMin = (et.getHour() * 60) + et.getMinute();
 
+			sum_time += (double)(etMin - stMin) / 60;
+
+		}
+
+		if(sum_time - ((double)stet_list.size()) < 0.0) {
+			sum_time = 0.0;
 		}
 		return sum_time - ((double)stet_list.size());
 	}

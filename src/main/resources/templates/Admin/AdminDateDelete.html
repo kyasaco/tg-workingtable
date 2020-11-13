@@ -25,53 +25,78 @@
 			<dl class="form-explanation">
 				<dt><h4 class="h4-titles">勤務表削除</h4></dt>
 				<dd>
-					<p class="requried_msg">従業員IDと日付で勤務表を検索し、削除ボタンで削除実行できます</p>
+					<p class="requried_msg">従業員IDと日付で勤務表を検索し削除ボタンで削除実行できます</p>
 					<p class="requried_msg">未入力(-ハイフン)の場合は全てが対象になります</p>
 				</dd>
 			</dl>
 
 			<form th:action="@{/Admin/DeleteDate/search}" method="post" th:object="${AdminDeleteForm}">
 			<table>
-				<tr><td>従業員ID：</td><td><input type="text" name="userid" th:value="*{userid}"></td></tr>
+				<tr>
+					<td>従業員ID：</td>
+					<td><input type="text" name="userid" th:value="*{userid}"></td></tr>
 				<tr>
 					<td>日付：</td>
 					<td>
 						<select name="year" id="year">
 							<option value="">-</option>
 							<option th:each="year:${SELECT_YEAR}" th:value="${year.value}"
-							 th:text="${year.key}" th:selected="${year.value} == *{year}"></option>
+							th:text="${year.key}" th:selected="${year.value} == *{year}"></option>
 						</select>
 						<label for="year"><span class="requried_msg">年</span></label>
 						<select name="month" id="month">
 							<option value="">-</option>
 							<option th:each="month:${SELECT_MONTH}" th:value="${month.value}"
-							 th:text="${month.key}"  th:selected="${month.value} == *{month}"></option>
+							th:text="${month.key}"  th:selected="${month.value} == *{month}"></option>
 						</select>
 						<label for="month"><span class="requried_msg">月</span></label>
 						<select name="day" id="day">
 							<option value="">-</option>
 							<option th:each="day:${SELECT_DAYS}" th:value="${day.value}"
-							 th:text="${day.key}" th:selected="${day.value} == *{day}"></option>
+							th:text="${day.key}" th:selected="${day.value} == *{day}"></option>
 						</select>
 						<label for="day"><span class="requried_msg">日</span></label>
 					</td>
 				</tr>
 				<tr>
-					<td></td>
+					<td>
+					</td>
 					<td class="margin-left-on">
-						<input type="submit"value="検索" >
-<!--
-						<span th:if="${#fields.hasErrors(AdminDeleteForm.class)}" th:errors="*{AdminDeleteForm.class}" class="error_msg"></span>
--->
 						<span th:if="${#fields.hasErrors('global')}" th:errors="*{global}" class="error_msg"></span>
 						<span th:text="${error_message}" class="error_msg"></span>
+
 					</td>
+					<td><input type="submit"value="検索" ></td>
 				</tr>
 			</table>
 			</form>
 			<a th:href="@{/Admin(today=${today})}" class="back_link_icon margin-left-on">管理画面へ戻る</a>
 		</div>
-		<div style="margin-left: auto;">
+		<div style="margin-left: auto;" th:if="!${#lists.isEmpty(content)}">
+<!-------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+			<div>
+				<ul>
+					<li style="display:inline;">
+						<span th:if="${date_data.first}" class="page-arrorw-nolink">&lt;&lt;前</span>
+						<a th:if="${!date_data.first}" th:href="@{/Admin/DeleteDate/search(page = ${date_data.number} - 1)}" >
+							&lt;&lt;前
+						</a>
+					</li>
+					<li th:each="i : ${#numbers.sequence(0, date_data.totalPages - 1)}"style="display:inline; margin-left:10px;">
+						<span th:if="${i} == ${date_data.number}" th:text="${i + 1}"  class="page-arrorw-nolink">1</span>
+						<a th:if="${i} != ${date_data.number}" th:href="@{/Admin/DeleteDate/search(page = ${i})}">
+							<span th:text="${i+1}">1</span>
+						</a>
+					</li>
+					<li style="display:inline; margin-left:10px;">
+						<span th:if="${date_data.last}" class="page-arrorw-nolink">次&gt;&gt;</span>
+						<a th:if="${!date_data.last}" th:href="@{/Admin/DeleteDate/search(page = (${date_data.number} + 1))}" >
+							次&gt;&gt;
+						</a>
+					</li>
+				</ul>
+		</div>
+<!-------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 			<table class="DateTable">
 				<thead class="DateTable-thead">
 					<th class="DateTable-Column">従業員ID</th>
@@ -97,6 +122,9 @@
 					</tr>
 			</tbody>
 		</table>
+		</div>
+		<div class="isEmpty_msg" th:if="${#lists.isEmpty(content)}">
+			<span class="important">データが存在しません</span>
 		</div>
 	</div>
 

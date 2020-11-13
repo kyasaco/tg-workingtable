@@ -11,8 +11,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.app.Admin.PlansDeleteForm;
-import com.example.demo.app.Admin.PlansForm;
+import com.example.demo.app.Admin.forms.PlansDeleteForm;
+import com.example.demo.app.Admin.forms.PlansForm;
 import com.example.demo.doamin.model.Plans;
 import com.example.demo.doamin.repository.plans.PlansRepository;
 import com.example.demo.errors.DateValidation;

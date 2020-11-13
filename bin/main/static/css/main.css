@@ -1,14 +1,16 @@
 @charset "UTF-8";
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
-
+:root{
+	--blue : #0b41a0;
+}
 body{
 	font-family:'Noto Sans JP', sans-serif;
 	font-size: 18px;
-    color: #0b41a0;
+    color: var(--blue);
 
 }
 .custombody{
-	background-color: #0b41a0;
+	background-color: var(--blue);
 }
 .form-explanation{
 	margin-bottom:0.5em;
@@ -92,7 +94,7 @@ a:hover::after{
     margin-bottom: 1em;
     background: #d6ebff;
     box-shadow: 0px 0px 3px 4px #d6ebff;
-    border: dashed 2px #0b41a0;
+    border: dashed 2px var(--blue);
     text-align: left;
 /*    align-items: flex-end;*/
     flex-direction: column;
@@ -134,7 +136,7 @@ top: 22em;
 	justify-content:space-around;
     height: 10em;
     background-image: url(../images/CorkBoard-768x480.jpg);
-    border: 3px solid #0b41a0;
+    border: 3px solid var(--blue);
 }
 .debug1{
     height: auto;
@@ -148,7 +150,7 @@ top: 22em;
     justify-content: flex-start;
     flex-wrap:wrap;
     background-color: #f8f9fc;
-	min-height: 20em;
+	min-height: 25em;
 }
 
 .debug3{
@@ -160,7 +162,6 @@ top: 22em;
 {
 	display:inline-block;
 }
-
 input[type="submit"],input[type="reset"]{
 	border:1px solid #0086f9;
 	border-radius: 6px;
@@ -179,6 +180,10 @@ input[type="reset"]:hover{
 	background:linear-gradient(0deg,#FF367F,#FFD5EC);
 
 }
+input:focus{
+	background-color: rgba(0,134,249,0.5);
+}
+
 button:hover{
 		background:linear-gradient(0deg,#2894f9,#d2e4f7);
 }
@@ -231,6 +236,9 @@ input[type="submit"]:active{
 	border: 2px solid grey;
 	border-collapse: collapse;
 }
+.page-arrorw-nolink{
+	font-size: 75%;
+}
 /***********insertForm.html***********/
 .form_custom{
 	display: flex;
@@ -243,6 +251,7 @@ input[type="submit"]:active{
 .requried_msg{
 	font-size:70%;
 	line-height: 1.5;
+	text-indent: 1.5em;
 }
 #form_go{
 	text-align: end;
@@ -308,7 +317,7 @@ hr{
 #plan{
 	resize:none;
 	width:100%;
-	height:5em;
+	height:12em;
 }
 .main_plans_list{
 	width:50%;
@@ -369,7 +378,7 @@ background: #dfefff;
 }
 .plans_list_plans::-webkit-scrollbar-thumb {
 
-  background: #0b41a0;
+  background: var(--blue);
 
   border-radius: 3px;
 }
@@ -391,6 +400,13 @@ background: #dfefff;
 .calendar_size{
 	width:50%;
 }
+.change-hr{
+	border-top-width: 2px;
+    border-style: dashed;
+    border-color: var(--blue);
+    margin: 0;
+}
+
 /*banner*/
 #Admin_nav{
     display: flex;
@@ -416,6 +432,12 @@ input#input-text-user {
     text-align: end;
     margin-top: 0.5em;
 }
+.isEmpty_msg{
+    margin-bottom: auto;
+    position: relative;
+    left: 20em;
+}
+
 /****calendar.html****/
 #caleandar{
 	background-color: white;
@@ -425,7 +447,11 @@ input#input-text-user {
 .admin-body{
 	display:flex;
 	flex-direction: column;
-	align-items: center;
+    position: absolute;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-60%, -70%);
 }
 .admin-list>button {
     width: 100%;
@@ -435,4 +461,7 @@ input#input-text-user {
 }
 a.color-change:visited{
 	color:white;
+}
+.text-indent-block{
+	text-indent:0;
 }

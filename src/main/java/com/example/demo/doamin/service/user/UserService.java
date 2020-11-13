@@ -11,8 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.app.Admin.UserConfForm;
-import com.example.demo.app.login.InsertForm;
+import com.example.demo.app.Admin.forms.UserConfForm;
+import com.example.demo.app.login.forms.InsertForm;
 import com.example.demo.doamin.model.RoleName;
 import com.example.demo.doamin.model.User;
 import com.example.demo.doamin.model.UserEcpertPass;

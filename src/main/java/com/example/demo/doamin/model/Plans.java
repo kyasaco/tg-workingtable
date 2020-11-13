@@ -31,7 +31,7 @@ public class Plans {
 	private boolean holiday;
 
 	public void setInitData() {
-		this.title = "予定はありません";
+		this.title = "";
 		this.plans = "";
 		this.holiday = false;
 	}

@@ -14,6 +14,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.security.access.annotation.Secured;
@@ -30,6 +34,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.MyAppProperties;
+import com.example.demo.app.Admin.forms.AdminDeleteForm;
+import com.example.demo.app.Admin.forms.PlansDeleteForm;
+import com.example.demo.app.Admin.forms.PlansForm;
+import com.example.demo.app.Admin.forms.UserConfForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.Plans;
 import com.example.demo.doamin.model.RoleName;
@@ -62,45 +70,46 @@ public class AdminController {
 /**Dateマッピング********************************************************************/
 
 	//勤務レコードを削除
-	@GetMapping({"/DeleteDate"})
-	@Transactional
-	public ModelAndView deleteDate(
-		@ModelAttribute("AdminDeleteForm")AdminDeleteForm adf,
-		ModelAndView mav) {
-		List<DateEntity> udata = dateservice.VfindUIDandTDY(adf);
+	@GetMapping("/DeleteDate/search")
+	public ModelAndView  GsearchDate(
+			@ModelAttribute("AdminDeleteForm")AdminDeleteForm adf,
+			@PageableDefault(page = 0,size = 20,sort = {"workers_id"},direction =Direction.ASC)Pageable pageable,
+			ModelAndView mav
+			) {
+		Page<DateEntity> udata = dateservice.getPageVYMD(adf, pageable);
+		mav.addObject("date_data",udata);
+		mav.addObject("content",udata.getContent());
 		mav.addObject("SELECT_YEAR",myAppProperties.getSELECT_YEAR());
 		mav.addObject("SELECT_MONTH",myAppProperties.getSELECT_MONTH());
 		mav.addObject("SELECT_DAYS",myAppProperties.getSELECT_DAYS());
 
 
-		mav.addObject("date_data",udata);
 		mav.setViewName("Admin/AdminDateDelete");
 
-		return mav;
+		return  mav;
 	}
 	//変更
 	//検索マッピング********************************************************************/
 	@PostMapping("/DeleteDate/search")
-	public ModelAndView searchDate(
+	public ModelAndView PsearchDate(
 			@Validated @ModelAttribute("AdminDeleteForm")AdminDeleteForm adf,
 			BindingResult bindingResult,
 			@RequestParam(name = "d_delete",required = false)Integer id,
-			ModelAndView mav) {
+			@PageableDefault(page = 0,size = 20,sort = {"workers_id"},direction =Direction.ASC)Pageable pageable,
+			ModelAndView mav
+			) {
 		String error_message = dateValidation.ErrorSwitching(dateservice.DeleteOne(id));
 		mav.addObject("error_message",error_message);
 
 		if(bindingResult.hasErrors()) {
-			List<DateEntity> udata = dateservice.findAllAsc();
-			mav.addObject("date_data",udata);
-		}else {
-			List<DateEntity> udata = dateservice.VfindUIDandTDY(adf);
-			mav.addObject("date_data",udata);
+			adf.Init();
 		}
-
+		Page<DateEntity> udata = dateservice.getPageVYMD(adf, pageable);
+		mav.addObject("date_data",udata);
+		mav.addObject("content",udata.getContent());
 		mav.addObject("SELECT_YEAR",myAppProperties.getSELECT_YEAR());
 		mav.addObject("SELECT_MONTH",myAppProperties.getSELECT_MONTH());
 		mav.addObject("SELECT_DAYS",myAppProperties.getSELECT_DAYS());
-
 
 		mav.setViewName("Admin/AdminDateDelete");
 
@@ -124,10 +133,14 @@ public class AdminController {
 	@PostMapping("/ConfUser")
 	@Transactional
 	public ModelAndView postUserConf(
-			@ModelAttribute("user_form")UserConfForm ucf,
+			@Validated @ModelAttribute("user_form")UserConfForm ucf,
+			BindingResult bindingResult,
 			@RequestParam(value="dcheck",required = false)List<String> dcheck,
 			ModelAndView mav) {
-		userservice.updateUsers(ucf, dcheck);
+		if(!bindingResult.hasErrors()) {
+			userservice.updateUsers(ucf, dcheck);
+		}
+
 		List<User> data = userservice.findAllAsc();
 		mav.addObject("SELECT_ROLE", myAppProperties.getSELECT_ROLE());
 		mav.addObject("user_data", data);

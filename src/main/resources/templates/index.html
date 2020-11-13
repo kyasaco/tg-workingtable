@@ -38,7 +38,8 @@
 			<!-- 今日の予定一覧 -->
 			<ul class="todays_plan_ul" >
 				<li class="plans_list"><h3 class="plans_list_main_title plans_list_main_title_today">今日の予定</h3></li>
-				<li class="plans_list plans_list_title" th:text="${plan_data[0].title}"></li>
+				<li class="plans_list plans_list_title" th:if="${plan_data[0].title} != '' "th:text="${plan_data[0].title}">予定はありません</li>
+				<li class="plans_list plans_list_title" th:if="${plan_data[0].title} == '' "th:text="予定はありません"></li>
 				<li class="plans_list plans_list_plans" th:if="${plan_data[0].plans}">
 					<th:block th:each="str, stat : ${plan_data[0].plans.split('\r\n|\r|\n', -1)}">
 				        <th:block th:text="${str}"/>
@@ -67,6 +68,15 @@
 			<div class="main-text-custom">
 				<form th:object="${EntryForm}" th:action="@{/}" method="post" id="form1">
 					<!-- 実行時の日付 -->
+					<dl class="form-explanation">
+						<dt><h4 class="h4-titles">勤務表登録方法</h4></dt>
+						<dd>
+							<p class="requried_msg">従業時間を指定して登録ボタンで登録できます</p>
+							<p class="requried_msg">2度目以降の登録は上書きとなり休日の登録はできません</p>
+							<p class="requried_msg">始業が終業を上回るか等しい場合も登録することはできません</p>
+						</dd>
+					</dl>
+					<hr class="change-hr">
 					<strong>日付：</strong><label th:text="${#temporals.format(today,'yyyy年MM月dd日(E)')}"> </label>
 					<input type="hidden" form="form1" th:value="${today}" name="today">
 					<a th:href="@{/calendar(todayCarendar=${today})}" class="index-calendar">カレンダー</a>
@@ -174,18 +184,21 @@
 		</div>
 		</div>
 		<div  class="main-text-custom-right " >
-			<div class="download-form">
-				<p class="download_topic main-text-custom p-titles">
-					勤務表をcsv形式でダウンロードできます<br>
-					未入力の場合は既定のファイル名になります
-				</p>
+			<div class="main-text-custom">
+				<dl class="form-explanation">
+					<dt><h4 class="h4-titles">csvダウンロード</h4></dt>
+					<dd>
+						<p class="requried_msg">選択月の勤務表をcsv形式でダウンロードできます</p>
+						<p class="requried_msg">未入力の場合は既定のファイル名になります</p>
+					</dd>
+				</dl>
 				<form th:action="@{/download}" method="post" >
 				     <input type="hidden" name="D_today" th:value="${today}">
 						<table>
 						<tbody>
 						<tr>
 							<td><label for="filename">ファイル名：</label></td>
-							<td><input type="text" name="filename" id="filename" value=""></td>
+							<td><input type="text" name="filename" id="filename" value=""placeholder="例)202011勤務表"></td>
 						</tr>
 						<tr>
 							<td></td>

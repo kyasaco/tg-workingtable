@@ -30,12 +30,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.MyAppProperties;
+import com.example.demo.app.entry.forms.EntryForm;
 import com.example.demo.doamin.model.DateEntity;
 import com.example.demo.doamin.model.OutDate;
 import com.example.demo.doamin.model.Plans;
 import com.example.demo.doamin.service.DataService.DateService;
 import com.example.demo.doamin.service.plans.PlansService;
-import com.example.demo.doamin.service.user.WorkersUserDetails;
+import com.example.demo.doamin.service.user.authentication.WorkersUserDetails;
 import com.example.demo.errors.DateValidation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;

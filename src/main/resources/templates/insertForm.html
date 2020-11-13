@@ -21,13 +21,12 @@
 				<tr>
 					<hr>
 					<td id="pwd_error">
-
 						<label id="pwd_lavel" for="userid">従業員ID<span class="requried_msg">(必須)</span>:</label>
 						<div class="smart_errors"><span th:if="${#fields.hasErrors('userid')}" th:errors="*{userid}" class="error_msg"></span></div>
 					</td>
 				</tr>
 				<tr>
-					<td><input type="text" class="form_input" id="userid" name="userid" th:value="*{userid}"></td>
+					<td><input type="text" class="form_input" id="userid" name="userid" th:value="*{userid}" placeholder="例)ABCD,1234"></td>
 				</tr>
 
 				<tr>
@@ -37,7 +36,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><input type="password"  class="form_input" id="password" name="password" th:value="*{password}"></td>
+					<td><input type="password"  class="form_input" id="password" name="password" th:value="*{password}" ></td>
 				</tr>
 
 				<tr>
@@ -47,7 +46,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><input type="text"  class="form_input" id="lastname" name="lastname" th:value="*{lastname}"></td>
+					<td><input type="text"  class="form_input" id="lastname" name="lastname" th:value="*{lastname}" placeholder="例)山田"></td>
 				</tr>
 
 				<tr>
@@ -57,7 +56,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><input type="text"  class="form_input" id="firstname" name="firstname" th:value="*{firstname}"></td>
+					<td><input type="text"  class="form_input" id="firstname" name="firstname" th:value="*{firstname}"placeholder="例)太郎"></td>
 				</tr>
 
 				<tr>

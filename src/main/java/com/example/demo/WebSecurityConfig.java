@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import com.example.demo.doamin.service.user.WorkersUserDetailsService;
+import com.example.demo.doamin.service.user.authentication.WorkersUserDetailsService;
 
 import lombok.AllArgsConstructor;
 
